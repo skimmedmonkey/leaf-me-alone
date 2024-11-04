@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suppliers</title>
+</head>
+<body>
+
+    <h2>Supplier Information</h2>
+    <a href="#">New</a>
+    <table>
+        <tr>
+            <th></th>
+            <th></th>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Amount Due</th>
+        </tr>
+        <tr>
+            <td><a href="#">Edit</a></td>
+            <td><a href="#">Delete</a></td>
+            <td>1</td>
+            <td>Greenhouse Co.</td>
+            <td>1112223333</td>
+            <td>contact@greenhouse.com</td>
+            <td>$1,200.00</td>
+        </tr>
+        <tr>
+            <td><a href="#">Edit</a></td>
+            <td><a href="#">Delete</a></td>
+            <td>2</td>
+            <td>Flora Supplies</td>
+            <td>2223334444</td>
+            <td>sales@florasupplies.com</td>
+            <td>$800.50</td>
+        </tr>
+        <tr>
+            <td><a href="#">Edit</a></td>
+            <td><a href="#">Delete</a></td>
+            <td>3</td>
+            <td>PlantWorld Ltd.</td>
+            <td>3334445555</td>
+            <td>info@plantworld.com</td>
+            <td>$950.00</td>
+        </tr>
+        <tr>
+            <td><a href="#">Edit</a></td>
+            <td><a href="#">Delete</a></td>
+            <td>4</td>
+            <td>Garden Essentials</td>
+            <td>4445556666</td>
+            <td>support@gardenessentials.com</td>
+            <td>$670.25</td>
+        </tr>
+        <tr>
+            <td><a href="#">Edit</a></td>
+            <td><a href="#">Delete</a></td>
+            <td>5</td>
+            <td>Outdoor Nursery</td>
+            <td>5556667777</td>
+            <td>help@outdoornursery.com</td>
+            <td>$320.40</td>
+        </tr>
+    </table>
+
+    <div id="insert" style="display: block">
+        <form id="add-supplier-form">
+            <legend><strong>Add Supplier</strong></legend>
+            <fieldset class="fields">
+                <label> Name </label> <input type="text" name="name">
+                <label> Phone </label> <input type="tel" name="phone">
+                <label> Email </label> <input type="email" name="email">
+                <label> Amount Due </label> <input type="text" name="amountDue">
+            </fieldset>
+            <input class="btn" type="submit" id="add-supplier-btn" value="Add Supplier">
+        </form>
+    </div>    
+
+    <div id="edit" style="display: block">
+        <form id="edit-supplier-form">
+            <legend><strong>Edit Supplier</strong></legend>
+            <fieldset class="fields">
+                <label> Name </label> <input type="text" name="name">
+                <label> Phone </label> <input type="tel" name="phone">
+                <label> Email </label> <input type="email" name="email">
+                <label> Amount Due </label> <input type="text" name="amountDue">
+            </fieldset>
+            <input class="btn" type="submit" id="edit-supplier-btn" value="Edit Supplier">
+        </form>
+    </div>    
+
+    <div id="delete" style="display: block">
+        <form id="delete-supplier-form">
+            <legend><strong>Delete Supplier</strong></legend>
+            <p>Are you sure you want to delete the following supplier?</p>
+            <p>ID: 1</p>
+            <p>Name: Greenhouse Co.</p>
+            <input class="btn" type="submit" id="delete-supplier-btn" value="Delete Supplier">
+        </form> 
+    </div>
+</body>
+</html>

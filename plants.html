@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plants</title>
+</head>
+<body>
+
+    <h2>Plant Inventory</h2>
+    <a href="#">New</a>
+    <table>
+        <tr>
+            <th></th>
+            <th></th>
+            <th>ID</th>
+            <th>Type Name</th>
+            <th>Type Description</th>
+            <th>Maturity</th>
+            <th>Price</th>
+            <th>Cost</th>
+            <th>Inventory</th>
+        </tr>
+        <tr>
+            <td><a href="#">Edit</a></td>
+            <td><a href="#">Delete</a></td>
+            <td>1</td>
+            <td>Raspberry</td>
+            <td>Fruit</td>
+            <td>Mature</td>
+            <td>$25.99</td>
+            <td>$15.00</td>
+            <td>50</td>
+        </tr>
+        <tr>
+            <td><a href="#">Edit</a></td>
+            <td><a href="#">Delete</a></td>
+            <td>2</td>
+            <td>Jade</td>
+            <td>Succulent</td>
+            <td>Seedling</td>
+            <td>$10.50</td>
+            <td>$6.00</td>
+            <td>200</td>
+        </tr>
+        <tr>
+            <td><a href="#">Edit</a></td>
+            <td><a href="#">Delete</a></td>
+            <td>3</td>
+            <td>Tulip</td>
+            <td>Flower</td>
+            <td>Mature</td>
+            <td>$30.75</td>
+            <td>$18.00</td>
+            <td>80</td>
+        </tr>
+        <tr>
+            <td><a href="#">Edit</a></td>
+            <td><a href="#">Delete</a></td>
+            <td>4</td>
+            <td>Oak Tree</td>
+            <td>Tree</td>
+            <td>Seedling</td>
+            <td>$12.25</td>
+            <td>$7.50</td>
+            <td>150</td>
+        </tr>
+        <tr>
+            <td><a href="#">Edit</a></td>
+            <td><a href="#">Delete</a></td>
+            <td>5</td>
+            <td>Saguaro</td>
+            <td>Cactus</td>
+            <td>Mature</td>
+            <td>$45.00</td>
+            <td>$27.00</td>
+            <td>20</td>
+        </tr>
+    </table>
+
+    <div id="insert" style="display: block">
+        <form id="add-plant-form">
+            <legend><strong>Add Plant</strong></legend>
+              <fieldset class="fields">
+                <label> Type Name </label> <input type="text" name="name">
+                <label> Type Description </label> <input type="text" name="description">
+                <label> Maturity </label> <input type="text" name="maturity">
+                <label> Price </label> <input type="number" name="price">
+                <label> Cost </label> <input type="number" name="cost">
+                <label> Inventory </label> <input type="number" name="inventory">
+              </fieldset>
+              <input class="btn" type="submit" id="add-plant-btn" value="Add Plant">
+        </form> 
+    </div>
+
+    <div id="edit" style="display: block">
+        <form id="edit-plant-form">
+            <legend><strong>Edit Plant</strong></legend>
+              <fieldset class="fields">
+                <label> Type Name </label> <input type="text" name="name">
+                <label> Type Description </label> <input type="text" name="description">
+                <label> Maturity </label> <input type="text" name="maturity">
+                <label> Price </label> <input type="number" name="price">
+                <label> Cost </label> <input type="number" name="cost">
+                <label> Inventory </label> <input type="number" name="inventory">
+              </fieldset>
+              <input class="btn" type="submit" id="edit-plant-btn" value="Edit Plant">
+        </form> 
+    </div>
+    <div id="delete" style="display: block">
+        <form id="delete-plant-form">
+            <legend><strong>Edit Plant</strong></legend>
+              <p>Are you sure you want to delete the following plant?</p>
+              <p>ID: 1</p>
+              <p>Name: Raspberry</p>
+              <input class="btn" type="submit" id="delete-plant-btn" value="Delete Plant">
+        </form> 
+    </div>
+</body>
+</html>
