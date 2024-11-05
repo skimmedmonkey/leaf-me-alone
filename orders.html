@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaf Me Alone</title>
+    <link rel="stylesheet" href="/Users/steven/Downloads/bsg_HTML_UI/style.css">
+</head>
+<body>
+
+    <h2>Orders</h2>
+
+    <button onclick="showOrderForm()">Add New Order</button>
+
+    <div id="orderFormContainer" style="display: none;">
+        <h3>Add / Edit Order</h3>
+        <form id="orderForm">
+            <label for="orderID">Order ID:</label>
+            <input type="number" id="orderID" readonly><br><br>
+
+            <label for="orderDate">Order Date:</label>
+            <input type="datetime-local" id="orderDate"><br><br>
+
+            <label for="orderPrice">Order Price:</label>
+            <input type="number" id="orderPrice" step="0.01"><br><br>
+
+            <label for="itemQuantity">Item Quantity:</label>
+            <input type="number" id="itemQuantity"><br><br>
+
+            <label for="isDelivery">Is Delivery:</label>
+            <input type="checkbox" id="isDelivery"><br><br>
+
+            <label for="customerID">Customer ID:</label>
+            <input type="number" id="customerID"><br><br>
+
+            <button type="button" onclick="addOrUpdateOrder()">Save Order</button>
+            <button type="button" onclick="hideOrderForm()">Cancel</button>
+        </form>
+    </div>
+
+    <h3>Orders</h3>
+    <table id="ordersTable">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Order Date</th>
+                <th>Order Price</th>
+                <th>Item Quantity</th>
+                <th>Is Delivery</th>
+                <th>Customer ID</th>
+                <th>Plants in Order</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Orders will be dynamically added here -->
+        </tbody>
+    </table>
+
+    <script>
+        const orders = [
+            { orderID: 1, orderDate: "2024-10-01T14:00", orderPrice: 82.73, itemQuantity: 3, isDelivery: true, customerID: 1 },
+            { orderID: 2, orderDate: "2024-10-12T10:30", orderPrice: 12.25, itemQuantity: 1, isDelivery: false, customerID: 2 },
+        ];
+
+        const orderItems = [
+            { orderItemID: 1, orderID: 1, plantID: 1, quantity: 2 },
+            { orderItemID: 2, orderID: 1, plantID: 3, quantity: 1 },
+        ];
+
+        const plants = [
+            { plantID: 1, plantTypeID: 101, plantTypeName: "Raspberry", plantPrice: 25.99 },
+            { plantID: 2, plantTypeID: 102, plantTypeName: "Jade", plantPrice: 10.5 },
+        ];
+
+        function showOrderForm() {
+            document.getElementById("orderFormContainer").style.display = "block";
+            document.getElementById("orderForm").reset();
+            document.getElementById("orderID").value = ""; // Clear the Order ID for new entries
+        }
+
+        function hideOrderForm() {
+            document.getElementById("orderFormContainer").style.display = "none";
+        }
+
+        function addOrUpdateOrder() {
+            const orderID = parseInt(document.getElementById("orderID").value);
+            const orderDate = document.getElementById("orderDate").value;
+            const orderPrice = parseFloat(document.getElementById("orderPrice").value);
+            const itemQuantity = parseInt(document.getElementById("itemQuantity").value);
+            const isDelivery = document.getElementById("isDelivery").checked;
+            const customerID = parseInt(document.getElementById("customerID").value);
+
+            const existingOrderIndex = orders.findIndex(order => order.orderID === orderID);
+
+            if (existingOrderIndex >= 0) {
+                orders[existingOrderIndex] = { orderID, orderDate, orderPrice, itemQuantity, isDelivery, customerID };
+            } else {
+                orders.push({ orderID: orders.length + 1, orderDate, orderPrice, itemQuantity, isDelivery, customerID });
+            }
+
+            displayOrders();
+            hideOrderForm();
+        }
+
+        function displayOrders() {
+            const tableBody = document.getElementById("ordersTable").getElementsByTagName("tbody")[0];
+            tableBody.innerHTML = "";
+
+            orders.forEach(order => {
+                const row = tableBody.insertRow();
+                row.insertCell(0).innerText = order.orderID;
+                row.insertCell(1).innerText = order.orderDate;
+                row.insertCell(2).innerText = `$${order.orderPrice.toFixed(2)}`;
+                row.insertCell(3).innerText = order.itemQuantity;
+                row.insertCell(4).innerText = order.isDelivery ? "Yes" : "No";
+                row.insertCell(5).innerText = order.customerID;
+                row.insertCell(6).innerHTML = getPlantsInOrder(order.orderID);
+                row.insertCell(7).innerHTML = `
+                    <button onclick="editOrder(${order.orderID})">Edit</button>
+                    <button onclick="deleteOrder(${order.orderID})">Delete</button>
+                `;
+            });
+        }
+
+        function getPlantsInOrder(orderID) {
+            const itemsForOrder = orderItems.filter(item => item.orderID === orderID);
+            const plantsDetails = itemsForOrder.map(item => {
+                const plant = plants.find(p => p.plantID === item.plantID);
+                return plant ? `${plant.plantTypeName} ($${plant.plantPrice.toFixed(2)} x ${item.quantity})` : "";
+            });
+            return plantsDetails.join("<br>");
+        }
+
+        function editOrder(orderID) {
+            const order = orders.find(order => order.orderID === orderID);
+            if (order) {
+                showOrderForm();
+                document.getElementById("orderID").value = order.orderID;
+                document.getElementById("orderDate").value = order.orderDate;
+                document.getElementById("orderPrice").value = order.orderPrice;
+                document.getElementById("itemQuantity").value = order.itemQuantity;
+                document.getElementById("isDelivery").checked = order.isDelivery;
+                document.getElementById("customerID").value = order.customerID;
+            }
+        }
+
+        window.onload = function() {
+            displayOrders();
+        };
+    </script>
+
+</body>
+</html>
