@@ -14,8 +14,17 @@ VALUES
 --Insert Plant form data
 INSERT INTO dbo.PlantTypes
     (plantTypeName, plantTypeDescription)
+VALUES
+    (:pTypeInput, :pTypeDescription)
 
 INSERT INTO dbo.Plants
     (plantTypeID, plantMaturity, plantPrice, plantCost, plantInventory)
 VALUES
-    ()
+    (
+        (SELECT plantTypeID from dbo.PlantTypes where plantTypeName = :pTypeNameInput),
+        :pMaturityInput,
+        :pPriceInput,
+        :pCostInput,
+        :pInventoryInput
+    )
+
