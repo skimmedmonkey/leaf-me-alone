@@ -7,38 +7,20 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <h1>Leaf Me Alone</h1>
+    <nav>
+        <ul class="navbar">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="customers.html">Customers</a></li>
+            <li><a href="orders.html">Orders</a></li>
+            <li><a href="plants.html">Plants</a></li>
+            <li><a href="suppliers.html">Suppliers</a></li>
+        </ul>
+    </nav>
 
-    <h2>Orders</h2>
+    <h2>Customer Orders</h2>
 
-    <button onclick="showOrderForm()">Add New Order</button>
-
-    <div id="orderFormContainer" style="display: none;">
-        <h3>Add / Edit Order</h3>
-        <form id="orderForm">
-            <label for="orderID">Order ID:</label>
-            <input type="number" id="orderID" readonly><br><br>
-
-            <label for="orderDate">Order Date:</label>
-            <input type="datetime-local" id="orderDate"><br><br>
-
-            <label for="orderPrice">Order Price:</label>
-            <input type="number" id="orderPrice" step="0.01"><br><br>
-
-            <label for="itemQuantity">Item Quantity:</label>
-            <input type="number" id="itemQuantity"><br><br>
-
-            <label for="isDelivery">Is Delivery:</label>
-            <input type="checkbox" id="isDelivery"><br><br>
-
-            <label for="customerID">Customer ID:</label>
-            <input type="number" id="customerID"><br><br>
-
-            <button type="button" onclick="addOrUpdateOrder()">Save Order</button>
-            <button type="button" onclick="hideOrderForm()">Cancel</button>
-        </form>
-    </div>
-
-    <h3>Orders</h3>
+    <h3>All Orders</h3>
     <table id="ordersTable">
         <thead>
             <tr>
@@ -57,26 +39,62 @@
         </tbody>
     </table>
 
+    <button onclick="showOrderForm()">Add New Order</button>
+
+    <div id="orderFormContainer" style="display: none;">
+        <h3>Add / Edit Order</h3>
+        <form id="orderForm">
+            <label for="orderID">Order ID:</label>
+            <input type="number" id="orderID" readonly><br><br>
+
+            <label for="orderDate">Order Date:</label>
+            <input type="datetime-local" id="orderDate"><br><br>
+
+            <label for="orderPrice">Order Price:</label>
+            <input type="number" id="orderPrice" step="0.01"><br><br>
+
+            <label for="itemQuantity">Item Quantity:</label>
+            <input type="number" id="itemQuantity"><br><br>
+
+            <p>Plants in Order:</p>
+            <ul id="plantsInOrderList">
+            <!-- Added plants will be displayed here -->
+            </ul>
+
+            <label for="isDelivery">Is Delivery:</label>
+            <input type="checkbox" id="isDelivery"><br><br>
+
+            <label for="customerID">Customer ID:</label>
+            <input type="number" id="customerID"><br><br>
+
+            <button type="button" onclick="addOrUpdateOrder()">Save Order</button>
+            <button type="button" onclick="hideOrderForm()">Cancel</button>
+        </form>
+    </div>
+
     <script>
         const orders = [
-            { orderID: 1, orderDate: "2024-10-01T14:00", orderPrice: 82.73, itemQuantity: 3, isDelivery: true, customerID: 1 },
-            { orderID: 2, orderDate: "2024-10-12T10:30", orderPrice: 12.25, itemQuantity: 1, isDelivery: false, customerID: 2 },
+            { orderID: 1, orderDate: "2024-10-01T14:00", orderPrice: 62.48, itemQuantity: 3, isDelivery: true, customerID: 1 },
+            { orderID: 2, orderDate: "2024-10-12T10:30", orderPrice: 30.75, itemQuantity: 1, isDelivery: false, customerID: 2 },
         ];
 
         const orderItems = [
             { orderItemID: 1, orderID: 1, plantID: 1, quantity: 2 },
             { orderItemID: 2, orderID: 1, plantID: 2, quantity: 1 },
+            { orderItemID: 3, orderID: 2, plantID: 3, quantity: 1 },
         ];
 
         const plants = [
             { plantID: 1, plantTypeID: 101, plantTypeName: "Raspberry", plantPrice: 25.99 },
             { plantID: 2, plantTypeID: 102, plantTypeName: "Jade", plantPrice: 10.5 },
+            { plantID: 3, plantTypeID: 103, plantTypeName: "Tulip", plantPrice: 30.75 },
         ];
 
         function showOrderForm() {
             document.getElementById("orderFormContainer").style.display = "block";
             document.getElementById("orderForm").reset();
-            document.getElementById("orderID").value = ""; // Clear the Order ID for new entries
+            document.getElementById("orderID").value = "";
+            document.getElementByID("plantsInOrderList").innerHTML = "";
         }
 
         function hideOrderForm() {
@@ -88,6 +106,7 @@
             const orderDate = document.getElementById("orderDate").value;
             const orderPrice = parseFloat(document.getElementById("orderPrice").value);
             const itemQuantity = parseInt(document.getElementById("itemQuantity").value);
+            const plantsInOrderList = document.getPlantsInOrder(order.orderID);
             const isDelivery = document.getElementById("isDelivery").checked;
             const customerID = parseInt(document.getElementById("customerID").value);
 
