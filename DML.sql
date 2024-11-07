@@ -16,6 +16,13 @@ FROM dbo.Plants p
 INNER JOIN dbo.PlantTypes pt
 ON p.plantTypeID = pt.id
 
+--Order data
+Select o.orderID, o.orderDate, o.orderPrice, o.itemQuantity, o.isDelivery, o.customerID, c.customerName, GROUP_CONCAT(p.plantName) AS plantsInOrder
+FROM dbo.Orders orderDateJOIN dbo.Customers c ON o.customerID = c.customerID
+LEFT JOIN dbo.OrderItems oi ON o.orderID = oi.orderID
+LEFT JOIN dbo.Plants p ON oi.plantID = p.plantID
+GROUP BY o.orderID
+
 -------------INSERT STATEMENTS------------
 
 --Customer form data
@@ -48,6 +55,17 @@ VALUES
         :pInventoryInput
     )
 
+--Order form data
+INSERT INTO dbo.Orders
+    (orderDate, orderPrice, itemQuantity, isDelivery, customerID)
+VALUES
+    (:orderDateInput, :orderPriceInput, :itemQuantityInput, :isDeliveryInput, :customerIDInput)
+
+--OrderItems data
+INSERT INTO dbo.OrderItems
+    (orderID, plantID, quantity)
+VALUES
+    (:orderID, :plantIDInput, :quantityInput);
 
 -------------DELETE STATEMENTS------------
 
@@ -62,3 +80,24 @@ WHERE id = :sSupplierID
 --Plant data
 DELETE FROM dbo.Plants
 WHERE id = :pPlantID
+
+--OrderItems data
+DELETE FROM dbo.OrderItems
+Where orderID = :orderIDInput;
+
+--Orders data
+DELETE FROM dbo.Orders
+WHERE orderID = :orderIDInput;
+
+-------------UPDATE STATEMENTS------------
+
+--Update Orders data
+UPDATE dbo.Orders
+SET
+    orderDate = :orderDateInput,
+    orderPrice = :orderPriceInput,
+    itemQuantity = :itemQuantityInput,
+    isDelivery = :isDeliveryInput,
+    customerID = :customerIDInput
+WHERE
+    orderID = :orderIDInput;
