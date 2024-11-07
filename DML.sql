@@ -101,3 +101,42 @@ SET
     customerID = :customerIDInput
 WHERE
     orderID = :orderIDInput;
+
+--Update Customers data
+UPDATE dbo.Customers
+SET
+    customerName = :customerName, 
+    customerEmail = :customerEmail, 
+    customerPhone = :customerPhone, 
+    customerAddress = :customerAddress, 
+    createDate = :createDate
+WHERE 
+    customerID = :cCustomerID
+
+--Update Suppliers data
+UPDATE dbo.Suppliers
+SET  
+    supplierName = :supplierName, 
+    supplierPhone = :supplierPhone, 
+    supplierEmail = :supplierEmail, 
+    amountDue = :amountDue
+WHERE
+    supplierID = :supplierID
+
+--Update Plants data
+UPDATE dbo.Plants
+SET
+    plantName = :plantName, 
+    plantTypeID = :plantTypeID, 
+    plantMaturity = :plantMaturity,
+    plantPrice = :plantPrice, 
+    plantCost = :plantCost, 
+    plantInventory = :plantInventory
+WHERE
+    plantID = :plantID
+
+UPDATE dbo.PlantTypes
+SET
+    plantTypeName = :plantTypeName
+WHERE
+    plantTypeID = :plantTypeID
