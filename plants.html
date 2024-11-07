@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Plants</title>
+</head>
+<script language="JavaScript">
+    function showPlantForm(type){
+        const container = document.getElementById('form-space');
+        container.innerHTML = '' //Clear this section
+
+        const form = document.createElement('form');
+        const legend = document.createElement('legend');
+        legend.innerHTML = `<strong>${type} Plant</strong>`;
+        form.appendChild(legend);
+
+        const fieldset = document.createElement('fieldset');
+
+        const createInputField = (labelText, inputType, inputName) => {
+            const label = document.createElement('label');
+            label.textContent = labelText;
+            const input = document.createElement('input');
+            input.type = inputType;
+            input.name = inputName;
+            fieldset.appendChild(label);
+            fieldset.appendChild(input);
+        };
+
+        createInputField('Name', 'text', 'name');
+        createInputField('Type Description', 'text', 'description');
+        createInputField('Maturity', 'text', 'maturity');
+        createInputField('Price', 'number', 'price');
+        createInputField('Cost', 'number', 'cost');
+        createInputField('Inventory', 'number', 'inventory');
+
+        form.appendChild(fieldset);
+
+        const btns =  document.createElement('div');
+
+        const submitBtn = document.createElement('input');
+        submitBtn.className = 'btn';
+        submitBtn.type = 'submit';
+        submitBtn.value = `${type} Plant`;
+        btns.appendChild(submitBtn)
+
+        const cancelBtn = document.createElement('input')
+        cancelBtn.className = 'btn';
+        cancelBtn.type = 'submit';
+        cancelBtn.value = 'Cancel'
+        cancelBtn.onclick = () => (container.innerHTML = '')
+        btns.appendChild(cancelBtn)
+
+        form.appendChild(btns);
+        container.appendChild(form)
+    }
+
+    function showDeleteForm(button) {
+        const container = document.getElementById('form-space');
+        container.innerHTML = '' //Clear this section
+
+        const form = document.createElement('form');
+        const legend = document.createElement('legend');
+        legend.innerHTML = `<strong>Delete Plant</strong>`;
+        form.appendChild(legend)
+        
+        confirmation = document.createElement('p')
+        confirmation.innerHTML = "Are you sure you want to delete the following plant?"
+        form.appendChild(confirmation)
+
+        const row = button.parentElement.parentElement;
+        const cells = row.getElementsByTagName('td');
+        const id = cells[0].textContent;
+        const name = cells[1].textContent;
+
+        deletingPlant = document.createElement('p')
+        deletingPlant.innerHTML = `ID: ${id}, Name: ${name}`
+        form.appendChild(deletingPlant)
+
+        const btns =  document.createElement('div');
+        
+        input = document.createElement('input');
+        input.type ="submit"
+        input.className = "btn"
+        input.value = "Delete Plant"
+        btns.appendChild(input)
+
+        const cancelBtn = document.createElement('input')
+        cancelBtn.className = 'btn';
+        cancelBtn.type = 'submit';
+        cancelBtn.value = 'Cancel'
+        cancelBtn.onclick = () => (container.innerHTML = '')
+        btns.appendChild(cancelBtn)
+
+        form.appendChild(btns);
+        container.appendChild(form)
+    }
+
+
+</script>
+<body>
+
+    <h2>Plant Inventory</h2>
+    <button onclick="showPlantForm('Add')">Add</button>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Type Name</th>
+            <th>Type Description</th>
+            <th>Maturity</th>
+            <th>Price</th>
+            <th>Cost</th>
+            <th>Inventory</th>
+            <th></th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>Raspberry</td>
+            <td>Fruit</td>
+            <td>Mature</td>
+            <td>$25.99</td>
+            <td>$15.00</td>
+            <td>50</td>
+            <td>
+                <button onclick="showPlantForm('Edit')">Edit</button>
+                <button onclick="showDeleteForm(this)">Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Jade</td>
+            <td>Succulent</td>
+            <td>Seedling</td>
+            <td>$10.50</td>
+            <td>$6.00</td>
+            <td>200</td>
+            <td>
+                <button onclick="showPlantForm('Edit')">Edit</button>
+                <button onclick="showDeleteForm(this)">Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Tulip</td>
+            <td>Flower</td>
+            <td>Mature</td>
+            <td>$30.75</td>
+            <td>$18.00</td>
+            <td>80</td>
+            <td>
+                <button onclick="showPlantForm('Edit')">Edit</button>
+                <button onclick="showDeleteForm(this)">Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>Oak Tree</td>
+            <td>Tree</td>
+            <td>Seedling</td>
+            <td>$12.25</td>
+            <td>$7.50</td>
+            <td>150</td>
+            <td>
+                <button onclick="showPlantForm('Edit')">Edit</button>
+                <button onclick="showDeleteForm(this)">Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>Saguaro</td>
+            <td>Cactus</td>
+            <td>Mature</td>
+            <td>$45.00</td>
+            <td>$27.00</td>
+            <td>20</td>
+            <td>
+                <button onclick="showPlantForm('Edit')">Edit</button>
+                <button onclick="showDeleteForm(this)">Delete</button>
+            </td>
+        </tr>
+    </table>
+    <p></p>
+    <div id="form-space" style="display: block"></div>
+</body>
+</html>

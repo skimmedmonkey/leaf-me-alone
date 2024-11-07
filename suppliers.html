@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Suppliers</title>
+</head>
+<script language="JavaScript">
+    function showSupplierForm(type) {
+        const container = document.getElementById('form-space');
+        container.innerHTML = ''; // Clear this section
+
+        const form = document.createElement('form');
+        const legend = document.createElement('legend');
+        legend.innerHTML = `<strong>${type} Supplier</strong>`;
+        form.appendChild(legend);
+
+        const fieldset = document.createElement('fieldset');
+
+        const createInputField = (labelText, inputType, inputName) => {
+            const label = document.createElement('label');
+            label.textContent = labelText;
+            const input = document.createElement('input');
+            input.type = inputType;
+            input.name = inputName;
+            fieldset.appendChild(label);
+            fieldset.appendChild(input);
+        };
+
+        // Add fields specific to suppliers
+        createInputField('Name', 'text', 'name');
+        createInputField('Phone', 'tel', 'phone');
+        createInputField('Email', 'email', 'email');
+        createInputField('Amount Due', 'text', 'amountDue');
+
+        form.appendChild(fieldset);
+
+        const btns = document.createElement('div');
+
+        const submitBtn = document.createElement('input');
+        submitBtn.className = 'btn';
+        submitBtn.type = 'submit';
+        submitBtn.value = `${type} Supplier`;
+        btns.appendChild(submitBtn);
+
+        const cancelBtn = document.createElement('input');
+        cancelBtn.className = 'btn';
+        cancelBtn.type = 'button';
+        cancelBtn.value = 'Cancel';
+        cancelBtn.onclick = () => (container.innerHTML = '');
+        btns.appendChild(cancelBtn);
+
+        form.appendChild(btns);
+        container.appendChild(form);
+    }
+
+    function showDeleteForm(button) {
+        const container = document.getElementById('form-space');
+        container.innerHTML = ''; // Clear this section
+
+        const form = document.createElement('form');
+        const legend = document.createElement('legend');
+        legend.innerHTML = `<strong>Delete Supplier</strong>`;
+        form.appendChild(legend);
+
+        const confirmation = document.createElement('p');
+        confirmation.innerHTML = "Are you sure you want to delete the following supplier?";
+        form.appendChild(confirmation);
+
+        const row = button.parentElement.parentElement;
+        const cells = row.getElementsByTagName('td');
+        const id = cells[0].textContent;
+        const name = cells[1].textContent;
+
+        const deletingSupplier = document.createElement('p');
+        deletingSupplier.innerHTML = `ID: ${id}, Name: ${name}`;
+        form.appendChild(deletingSupplier);
+
+        const btns = document.createElement('div');
+
+        const deleteBtn = document.createElement('input');
+        deleteBtn.type = "submit";
+        deleteBtn.className = "btn";
+        deleteBtn.value = "Delete Supplier";
+        btns.appendChild(deleteBtn);
+
+        const cancelBtn = document.createElement('input');
+        cancelBtn.className = 'btn';
+        cancelBtn.type = 'button';
+        cancelBtn.value = 'Cancel';
+        cancelBtn.onclick = () => (container.innerHTML = '');
+        btns.appendChild(cancelBtn);
+
+        form.appendChild(btns);
+        container.appendChild(form);
+    }
+</script>
+<body>
+
+    <h2>Supplier Information</h2>
+    <button onclick="showSupplierForm('Add')">Add</button>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Amount Due</th>
+            <th></th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>Greenhouse Co.</td>
+            <td>1112223333</td>
+            <td>contact@greenhouse.com</td>
+            <td>$1,200.00</td>
+            <td>
+                <button onclick="showSupplierForm('Edit')">Edit</button>
+                <button onclick="showDeleteForm(this)">Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Flora Supplies</td>
+            <td>2223334444</td>
+            <td>sales@florasupplies.com</td>
+            <td>$800.50</td>
+            <td>
+                <button onclick="showSupplierForm('Edit')">Edit</button>
+                <button onclick="showDeleteForm(this)">Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>PlantWorld Ltd.</td>
+            <td>3334445555</td>
+            <td>info@plantworld.com</td>
+            <td>$950.00</td>
+            <td>
+                <button onclick="showSupplierForm('Edit')">Edit</button>
+                <button onclick="showDeleteForm(this)">Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>Garden Essentials</td>
+            <td>4445556666</td>
+            <td>support@gardenessentials.com</td>
+            <td>$670.25</td>
+            <td>
+                <button onclick="showSupplierForm('Edit')">Edit</button>
+                <button onclick="showDeleteForm(this)">Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>Outdoor Nursery</td>
+            <td>5556667777</td>
+            <td>help@outdoornursery.com</td>
+            <td>$320.40</td>
+            <td>
+                <button onclick="showSupplierForm('Edit')">Edit</button>
+                <button onclick="showDeleteForm(this)">Delete</button>
+            </td>
+        </tr>
+    </table>
+    <p></p>
+    <div id="form-space" style="display: block"></div>
+</body>
+</html>
