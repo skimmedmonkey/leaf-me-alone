@@ -18,15 +18,21 @@
 
         const fieldset = document.createElement('fieldset');
 
-        const createInputField = (labelText, inputType, inputName) => {
+        const createInputField = (labelText, inputType, inputName, tableFieldIndex) => {
             const label = document.createElement('label');
             label.textContent = labelText;
             const input = document.createElement('input');
             input.type = inputType;
             input.name = inputName;
+            if (action === 'Edit'){ // Set the default value of the field to current value in table
+                const row = button.parentElement.parentElement;
+                const cells = row.getElementsByTagName('td');
+                input.value = cells[tableFieldIndex].textContent;
+            }
             fieldset.appendChild(label);
             fieldset.appendChild(input);
         };
+
 
         const typeDescriptions = ["Fruit", "Succulent", "Flower", "Tree", "Cactus"];
         const maturityLevels = ["Seedling", "Young", "Mature"];
@@ -53,6 +59,7 @@
         createInputField('Price', 'number', 'price');
         createInputField('Cost', 'number', 'cost');
         createInputField('Inventory', 'number', 'inventory');
+
 
         form.appendChild(fieldset);
 

@@ -18,21 +18,26 @@
 
         const fieldset = document.createElement('fieldset');
 
-        const createInputField = (labelText, inputType, inputName) => {
+        const createInputField = (labelText, inputType, inputName, tableFieldIndex) => {
             const label = document.createElement('label');
             label.textContent = labelText;
             const input = document.createElement('input');
             input.type = inputType;
             input.name = inputName;
+            if (action === 'Edit'){ // Set the default value of the field to current value in table
+                const row = button.parentElement.parentElement;
+                const cells = row.getElementsByTagName('td');
+                input.value = cells[tableFieldIndex].textContent;
+            }
             fieldset.appendChild(label);
             fieldset.appendChild(input);
         };
 
         // Add fields specific to suppliers
-        createInputField('Name', 'text', 'name');
-        createInputField('Phone', 'tel', 'phone');
-        createInputField('Email', 'email', 'email');
-        createInputField('Amount Due', 'text', 'amountDue');
+        createInputField('Name', 'text', 'name', 1);
+        createInputField('Phone', 'tel', 'phone', 2);
+        createInputField('Email', 'email', 'email', 3);
+        createInputField('Amount Due', 'text', 'amountDue', 4);
 
         form.appendChild(fieldset);
 
