@@ -7,7 +7,7 @@
     <title>Plants</title>
 </head>
 <script language="JavaScript">
-    function showPlantForm(type){
+    function showPlantForm(type, button = null){
         const container = document.getElementById('form-space');
         container.innerHTML = '' //Clear this section
 
@@ -18,19 +18,30 @@
 
         const fieldset = document.createElement('fieldset');
 
-        const createInputField = (labelText, inputType, inputName) => {
+        const createInputField = (labelText, inputType, inputName, value = '') => {
             const label = document.createElement('label');
             label.textContent = labelText;
             const input = document.createElement('input');
             input.type = inputType;
             input.name = inputName;
+            input.value = value;
             fieldset.appendChild(label);
             fieldset.appendChild(input);
         };
 
-        createInputField('Plant ID', 'number', 'plantid');
-        createInputField('Supplier ID', 'number', 'supplierid');
+        if (type === 'Edit' && button) {
+            const row = button.parentElement.parentElement;
+            const cells = row.getElementsByTagName('td');
+            const plantId = cells[0].textContent;
+            const supplierId = cells[1].textContent;
 
+            // Pre-fill the fields with the values from the table row
+            createInputField('Plant ID', 'number', 'plantid', plantId);
+            createInputField('Supplier ID', 'number', 'supplierid', supplierId);
+        } else {
+            createInputField('Plant ID', 'number', 'plantid');
+            createInputField('Supplier ID', 'number', 'supplierid');
+        }
         form.appendChild(fieldset);
 
         const btns =  document.createElement('div');
@@ -119,7 +130,7 @@
             <td>1</td>
             <td>1</td>
             <td>
-                <button onclick="showPlantForm('Edit')">Edit</button>
+                <button onclick="showPlantForm('Edit', this)">Edit</button>
                 <button onclick="showDeleteForm(this)">Delete</button>
             </td>
         </tr>
@@ -127,7 +138,7 @@
             <td>1</td>
             <td>2</td>
             <td>
-                <button onclick="showPlantForm('Edit')">Edit</button>
+                <button onclick="showPlantForm('Edit', this)">Edit</button>
                 <button onclick="showDeleteForm(this)">Delete</button>
             </td>
         </tr>
@@ -135,7 +146,7 @@
             <td>2</td>
             <td>3</td>
             <td>
-                <button onclick="showPlantForm('Edit')">Edit</button>
+                <button onclick="showPlantForm('Edit', this)">Edit</button>
                 <button onclick="showDeleteForm(this)">Delete</button>
             </td>
         </tr>
@@ -143,7 +154,7 @@
             <td>2</td>
             <td>4</td>
             <td>
-                <button onclick="showPlantForm('Edit')">Edit</button>
+                <button onclick="showPlantForm('Edit', this)">Edit</button>
                 <button onclick="showDeleteForm(this)">Delete</button>
             </td>
         </tr>
@@ -151,7 +162,7 @@
             <td>3</td>
             <td>5</td>
             <td>
-                <button onclick="showPlantForm('Edit')">Edit</button>
+                <button onclick="showPlantForm('Edit', this)">Edit</button>
                 <button onclick="showDeleteForm(this)">Delete</button>
             </td>
         </tr>
