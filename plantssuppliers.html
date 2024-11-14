@@ -13,53 +13,23 @@
 
         const form = document.createElement('form');
         const legend = document.createElement('legend');
-        legend.innerHTML = `<strong>${type} Plant</strong>`;
+        legend.innerHTML = `<strong>${type} Plants Supplier</strong>`;
         form.appendChild(legend);
 
         const fieldset = document.createElement('fieldset');
 
-        const createInputField = (labelText, inputType, inputName, tableFieldIndex) => {
+        const createInputField = (labelText, inputType, inputName) => {
             const label = document.createElement('label');
             label.textContent = labelText;
             const input = document.createElement('input');
             input.type = inputType;
             input.name = inputName;
-            if (action === 'Edit'){ // Set the default value of the field to current value in table
-                const row = button.parentElement.parentElement;
-                const cells = row.getElementsByTagName('td');
-                input.value = cells[tableFieldIndex].textContent;
-            }
             fieldset.appendChild(label);
             fieldset.appendChild(input);
         };
 
-
-        const typeDescriptions = ["Fruit", "Succulent", "Flower", "Tree", "Cactus"];
-        const maturityLevels = ["Seedling", "Young", "Mature"];
-
-        const createDropdownField = (labelText, inputName, optionsArray) => {
-            const label = document.createElement('label');
-            label.textContent = labelText;
-            const select = document.createElement('select');
-            select.name = inputName;
-
-            optionsArray.forEach(optionValue => {
-                const option = document.createElement('option');
-                option.value = optionValue;
-                option.textContent = optionValue;
-                select.appendChild(option);
-            });
-            fieldset.appendChild(label);
-            fieldset.appendChild(select);
-        };
-
-        createInputField('Name', 'text', 'name');
-        createDropdownField('Type Description', 'description', typeDescriptions);
-        createDropdownField('Maturity', 'maturity', maturityLevels);
-        createInputField('Price', 'number', 'price');
-        createInputField('Cost', 'number', 'cost');
-        createInputField('Inventory', 'number', 'inventory');
-
+        createInputField('Plant ID', 'number', 'plantid');
+        createInputField('Supplier ID', 'number', 'supplierid');
 
         form.appendChild(fieldset);
 
@@ -68,7 +38,7 @@
         const submitBtn = document.createElement('input');
         submitBtn.className = 'btn';
         submitBtn.type = 'submit';
-        submitBtn.value = `${type} Plant`;
+        submitBtn.value = `${type} Plants Supplier`;
         btns.appendChild(submitBtn)
 
         const cancelBtn = document.createElement('input')
@@ -88,11 +58,11 @@
 
         const form = document.createElement('form');
         const legend = document.createElement('legend');
-        legend.innerHTML = `<strong>Delete Plant</strong>`;
+        legend.innerHTML = `<strong>Delete Plants Supplier</strong>`;
         form.appendChild(legend)
         
         confirmation = document.createElement('p')
-        confirmation.innerHTML = "Are you sure you want to delete the following plant?"
+        confirmation.innerHTML = "Are you sure you want to delete the following plant supplier?"
         form.appendChild(confirmation)
 
         const row = button.parentElement.parentElement;
@@ -109,7 +79,7 @@
         input = document.createElement('input');
         input.type ="submit"
         input.className = "btn"
-        input.value = "Delete Plant"
+        input.value = "Delete Plants Supplier"
         btns.appendChild(input)
 
         const cancelBtn = document.createElement('input')
@@ -137,27 +107,25 @@
             <li><a href="plantssuppliers.html">Plants Suppliers</a></li>
         </ul>
     </nav>
-    <h2>Plant Inventory</h2>
+    <h2>Plants Suppliers</h2>
     <button onclick="showPlantForm('Add')">Add</button>
     <table>
         <tr>
-            <th>ID</th>
-            <th>Type Name</th>
-            <th>Type Description</th>
-            <th>Maturity</th>
-            <th>Price</th>
-            <th>Cost</th>
-            <th>Inventory</th>
+            <th>Plant ID</th>
+            <th>Supplier ID</th>
             <th></th>
         </tr>
         <tr>
             <td>1</td>
-            <td>Raspberry</td>
-            <td>Fruit</td>
-            <td>Mature</td>
-            <td>$25.99</td>
-            <td>$15.00</td>
-            <td>50</td>
+            <td>1</td>
+            <td>
+                <button onclick="showPlantForm('Edit')">Edit</button>
+                <button onclick="showDeleteForm(this)">Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>2</td>
             <td>
                 <button onclick="showPlantForm('Edit')">Edit</button>
                 <button onclick="showDeleteForm(this)">Delete</button>
@@ -165,12 +133,15 @@
         </tr>
         <tr>
             <td>2</td>
-            <td>Jade</td>
-            <td>Succulent</td>
-            <td>Seedling</td>
-            <td>$10.50</td>
-            <td>$6.00</td>
-            <td>200</td>
+            <td>3</td>
+            <td>
+                <button onclick="showPlantForm('Edit')">Edit</button>
+                <button onclick="showDeleteForm(this)">Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>4</td>
             <td>
                 <button onclick="showPlantForm('Edit')">Edit</button>
                 <button onclick="showDeleteForm(this)">Delete</button>
@@ -178,38 +149,7 @@
         </tr>
         <tr>
             <td>3</td>
-            <td>Tulip</td>
-            <td>Flower</td>
-            <td>Mature</td>
-            <td>$30.75</td>
-            <td>$18.00</td>
-            <td>80</td>
-            <td>
-                <button onclick="showPlantForm('Edit')">Edit</button>
-                <button onclick="showDeleteForm(this)">Delete</button>
-            </td>
-        </tr>
-        <tr>
-            <td>4</td>
-            <td>Oak Tree</td>
-            <td>Tree</td>
-            <td>Seedling</td>
-            <td>$12.25</td>
-            <td>$7.50</td>
-            <td>150</td>
-            <td>
-                <button onclick="showPlantForm('Edit')">Edit</button>
-                <button onclick="showDeleteForm(this)">Delete</button>
-            </td>
-        </tr>
-        <tr>
             <td>5</td>
-            <td>Saguaro</td>
-            <td>Cactus</td>
-            <td>Mature</td>
-            <td>$45.00</td>
-            <td>$27.00</td>
-            <td>20</td>
             <td>
                 <button onclick="showPlantForm('Edit')">Edit</button>
                 <button onclick="showDeleteForm(this)">Delete</button>
