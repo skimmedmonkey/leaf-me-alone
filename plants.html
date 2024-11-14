@@ -18,22 +18,27 @@
 
         const fieldset = document.createElement('fieldset');
 
-        const createInputField = (labelText, inputType, inputName) => {
+        const createInputField = (labelText, inputType, inputName, tableFieldIndex) => {
             const label = document.createElement('label');
             label.textContent = labelText;
             const input = document.createElement('input');
             input.type = inputType;
             input.name = inputName;
+            if (action === 'Edit'){ // Set the default value of the field to current value in table
+                const row = button.parentElement.parentElement;
+                const cells = row.getElementsByTagName('td');
+                input.value = cells[tableFieldIndex].textContent;
+            }
             fieldset.appendChild(label);
             fieldset.appendChild(input);
         };
 
-        createInputField('Name', 'text', 'name');
-        createInputField('Type Description', 'text', 'description');
-        createInputField('Maturity', 'text', 'maturity');
-        createInputField('Price', 'number', 'price');
-        createInputField('Cost', 'number', 'cost');
-        createInputField('Inventory', 'number', 'inventory');
+        createInputField('Name', 'text', 'name', 1);
+        createInputField('Type Description', 'text', 'description', 2);
+        createInputField('Maturity', 'text', 'maturity', 3);
+        createInputField('Price', 'number', 'price', 4);
+        createInputField('Cost', 'number', 'cost', 5);
+        createInputField('Inventory', 'number', 'inventory', 6);
 
         form.appendChild(fieldset);
 

@@ -72,6 +72,15 @@
         </form>
     </div>
 
+    <div id="deleteFormContainer" style="display: none;">
+        <h3>Delete Order</h3>
+        <form id="deleteForm">
+            <p id="deleteOrderID"></p>
+            <button type="button" onclick="removeOrderFromData()">Delete Order</button>
+            <button type="button" onclick="hideDeleteForm()">Cancel</button>
+        </form>
+    </div>
+
     <script>
         const orders = [
             { orderID: 1, orderDate: "2024-10-01T14:00", orderPrice: 62.48, itemQuantity: 3, isDelivery: true, customerID: 1 },
@@ -94,7 +103,7 @@
             document.getElementById("orderFormContainer").style.display = "block";
             document.getElementById("orderForm").reset();
             document.getElementById("orderID").value = "";
-            document.getElementByID("plantsInOrderList").innerHTML = "";
+            document.getElementById("plantsInOrderList").innerHTML = "";
         }
 
         function hideOrderForm() {
@@ -162,6 +171,32 @@
                 document.getElementById("isDelivery").checked = order.isDelivery;
                 document.getElementById("customerID").value = order.customerID;
             }
+        }
+
+        function showDeleteForm(orderID) {
+            document.getElementById("deleteFormContainer").style.display = "block";
+            document.getElementById("deleteForm").reset();
+            document.getElementById("deleteOrderID").innerHTML = `Are you sure you want to delete order: ${orderID}`;
+        }
+
+        function hideDeleteForm() {
+            document.getElementById("orderFormContainer").style.display = "none";
+        }
+        
+        function deleteOrder(orderID) {
+            const order = orders.find(order => order.orderID === orderID);
+            if (order) {
+                const orderID = document.getElementById("orderID").value = order.orderID;
+                showDeleteForm(orderID);            
+            }
+        }
+
+        function removeOrderFromData(orderID) {
+
+            // SQL code to remove order from mySQLtable
+            displayOrders() // This should probably refetch results?
+            hideDeleteForm()
+
         }
 
         window.onload = function() {

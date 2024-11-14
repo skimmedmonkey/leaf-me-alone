@@ -7,10 +7,10 @@
     <title>Plants</title>
 </head>
 <script language="JavaScript">
-    function showCustomerForm(action) {
+    function showCustomerForm(button, action) {
         const container = document.getElementById('form-space');
         container.innerHTML = ''; // Clear this section
-
+        
         const form = document.createElement('form');
         const legend = document.createElement('legend');
         legend.innerHTML = `<strong>${action} Customer</strong>`;
@@ -18,21 +18,26 @@
 
         const fieldset = document.createElement('fieldset');
 
-        const createInputField = (labelText, inputType, inputName) => {
+        const createInputField = (labelText, inputType, inputName, tableFieldIndex) => {
             const label = document.createElement('label');
             label.textContent = labelText;
             const input = document.createElement('input');
             input.type = inputType;
             input.name = inputName;
+            if (action === 'Edit'){ // Set the default value of the field to current value in table
+                const row = button.parentElement.parentElement;
+                const cells = row.getElementsByTagName('td');
+                input.value = cells[tableFieldIndex].textContent;
+            }
             fieldset.appendChild(label);
             fieldset.appendChild(input);
         };
 
-        createInputField('Name', 'text', 'name');
-        createInputField('Email', 'email', 'email');
-        createInputField('Phone', 'tel', 'phone');
-        createInputField('Address', 'text', 'address');
-        createInputField('Create Date', 'datetime-local', 'createDate');
+        createInputField('Name', 'text', 'name', 1);
+        createInputField('Email', 'email', 'email', 2);
+        createInputField('Phone', 'tel', 'phone', 3);
+        createInputField('Address', 'text', 'address', 4);
+        createInputField('Create Date', 'datetime-local', 'createDate', 5);
 
         form.appendChild(fieldset);
 
@@ -54,6 +59,7 @@
         form.appendChild(btns);
         container.appendChild(form);
     }
+
 
     function showDeleteForm(button) {
         const container = document.getElementById('form-space');
@@ -128,7 +134,7 @@
             <td>123 Penn St, City, PA 15208</td>
             <td>1/15/24 10:30</td>
             <td>
-                <button onclick="showCustomerForm('Edit')">Edit</button>
+                <button onclick="showCustomerForm(this, 'Edit')">Edit</button>
                 <button onclick="showDeleteForm(this)">Delete</button>
             </td>
         </tr>
@@ -140,7 +146,7 @@
             <td>456 Oakdale Ave, Town, PA 15217</td>
             <td>2/20/24 15:45</td>
             <td>
-                <button onclick="showCustomerForm('Edit')">Edit</button>
+                <button onclick="showCustomerForm(this, 'Edit')">Edit</button>
                 <button onclick="showDeleteForm(this)">Delete</button>
             </td>
         </tr>
@@ -152,7 +158,7 @@
             <td>789 Pine Rd, Village, PA 15601</td>
             <td>3/18/24 12:00</td>
             <td>
-                <button onclick="showCustomerForm('Edit')">Edit</button>
+                <button onclick="showCustomerForm(this, 'Edit')">Edit</button>
                 <button onclick="showDeleteForm(this)">Delete</button>
             </td>
         </tr>
@@ -164,7 +170,7 @@
             <td>321 Birchwood Ln, City, PA 15232</td>
             <td>4/5/24 9:20</td>
             <td>
-                <button onclick="showCustomerForm('Edit')">Edit</button>
+                <button onclick="showCustomerForm(this, 'Edit')">Edit</button>
                 <button onclick="showDeleteForm(this)">Delete</button>
             </td>
         </tr>
@@ -176,7 +182,7 @@
             <td>654 Cedarcliff St, Town, PA 15213</td>
             <td>5/25/24 16:15</td>
             <td>
-                <button onclick="showCustomerForm('Edit')">Edit</button>
+                <button onclick="showCustomerForm(this, 'Edit')">Edit</button>
                 <button onclick="showDeleteForm(this)">Delete</button>
             </td>
         </tr>

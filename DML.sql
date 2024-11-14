@@ -29,30 +29,30 @@ GROUP BY o.orderID
 INSERT INTO dbo.Customers 
     (customerName, customerEmail, customerPhone, customerAddress, createDate)
 VALUES
-    (:cNameInput, :cEmailInput, :cPhoneInput, :cAddressInput, CURDATE())
+    (:nameInput, :emailInput, :phoneInput, :addressInput, CURDATE())
 
 --Supplier form data
 INSERT INTO dbo.Suppliers
     (supplierName, supplierPhone, supplierEmail, amountDue)
 VALUES
-    (:sNameInput, :sPhoneInput, :sEmailInput, :sAmountDue)
+    (:nameInput, :phoneInput, :emailInput, :amountDueInput)
 
 --Plant form data
 INSERT INTO dbo.PlantTypes
     (plantTypeName)
 VALUES
-    (:pTypeNameInput)
+    (:plantTypeNameInput)
 
 INSERT INTO dbo.Plants
     (plantName, plantTypeID, plantMaturity, plantPrice, plantCost, plantInventory)
 VALUES
     (   
         :pName,
-        (SELECT plantTypeID from dbo.PlantTypes where plantTypeName = :pTypeNameInput),
-        :pMaturityInput,
-        :pPriceInput,
-        :pCostInput,
-        :pInventoryInput
+        (SELECT plantTypeID from dbo.PlantTypes where plantTypeName = :plantTypeNameInput),
+        :plantMaturityInput,
+        :plantPriceInput,
+        :plantCostInput,
+        :plantInventoryInput
     )
 
 --Order form data
@@ -71,15 +71,15 @@ VALUES
 
 --Customer data
 DELETE FROM dbo.Customers
-WHERE id = :cInputID
+WHERE id = :customerIDInput
 
 --Supplier data
 DELETE FROM dbo.Suppliers
-WHERE id = :sSupplierID
+WHERE id = :supplierIDInput
 
 --Plant data
 DELETE FROM dbo.Plants
-WHERE id = :pPlantID
+WHERE id = :plantIDInput
 
 --OrderItems data
 DELETE FROM dbo.OrderItems
@@ -105,38 +105,39 @@ WHERE
 --Update Customers data
 UPDATE dbo.Customers
 SET
-    customerName = :customerName, 
-    customerEmail = :customerEmail, 
-    customerPhone = :customerPhone, 
-    customerAddress = :customerAddress, 
-    createDate = :createDate
+    customerName = :customerNameInput, 
+    customerEmail = :customerEmailInput, 
+    customerPhone = :customerPhoneInput, 
+    customerAddress = :customerAddressInput, 
+    createDate = :createDateInput
 WHERE 
-    customerID = :cCustomerID
+    customerID = :customerIDInput
 
 --Update Suppliers data
 UPDATE dbo.Suppliers
 SET  
-    supplierName = :supplierName, 
-    supplierPhone = :supplierPhone, 
-    supplierEmail = :supplierEmail, 
-    amountDue = :amountDue
+    supplierName = :supplierNameInput, 
+    supplierPhone = :supplierPhoneInput, 
+    supplierEmail = :supplierEmailInput, 
+    amountDue = :amountDueInput
 WHERE
-    supplierID = :supplierID
+    supplierID = :supplierIDInput
 
 --Update Plants data
 UPDATE dbo.Plants
 SET
-    plantName = :plantName, 
-    plantTypeID = :plantTypeID, 
-    plantMaturity = :plantMaturity,
-    plantPrice = :plantPrice, 
-    plantCost = :plantCost, 
-    plantInventory = :plantInventory
+    plantName = :plantNameInput, 
+    plantTypeID = :plantTypeIDInput, 
+    plantMaturity = :plantMaturityInput,
+    plantPrice = :plantPriceInput, 
+    plantCost = :plantCostInput, 
+    plantInventory = :plantInventoryInput
 WHERE
-    plantID = :plantID
+    plantID = :plantIDInput
 
+--Update PlantTypes data
 UPDATE dbo.PlantTypes
 SET
-    plantTypeName = :plantTypeName
+    plantTypeName = :plantTypeNameInput
 WHERE
-    plantTypeID = :plantTypeID
+    plantTypeID = :plantTypeIDInput
