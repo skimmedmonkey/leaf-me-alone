@@ -7,13 +7,13 @@
     <title>Plants</title>
 </head>
 <script language="JavaScript">
-    function showPlantForm(action){
+    function showPlantForm(button, action){
         const container = document.getElementById('form-space');
         container.innerHTML = '' //Clear this section
 
         const form = document.createElement('form');
         const legend = document.createElement('legend');
-        legend.innerHTML = `<strong>${type} Plant</strong>`;
+        legend.innerHTML = `<strong>${action} Plant</strong>`;
         form.appendChild(legend);
 
         const fieldset = document.createElement('fieldset');
@@ -53,13 +53,12 @@
             fieldset.appendChild(select);
         };
 
-        createInputField('Name', 'text', 'name');
+        createInputField('Name', 'text', 'name', 1);
         createDropdownField('Type Description', 'description', typeDescriptions);
         createDropdownField('Maturity', 'maturity', maturityLevels);
-        createInputField('Price', 'number', 'price');
-        createInputField('Cost', 'number', 'cost');
-        createInputField('Inventory', 'number', 'inventory');
-
+        createInputField('Price', 'text', 'price', 4);
+        createInputField('Cost', 'text', 'cost', 5);
+        createInputField('Inventory', 'number', 'inventory', 6);
 
         form.appendChild(fieldset);
 
@@ -68,7 +67,7 @@
         const submitBtn = document.createElement('input');
         submitBtn.className = 'btn';
         submitBtn.type = 'submit';
-        submitBtn.value = `${type} Plant`;
+        submitBtn.value = `${action} Plant`;
         btns.appendChild(submitBtn)
 
         const cancelBtn = document.createElement('input')
@@ -159,7 +158,7 @@
             <td>$15.00</td>
             <td>50</td>
             <td>
-                <button onclick="showPlantForm('Edit')">Edit</button>
+                <button onclick="showPlantForm(this, 'Edit')">Edit</button>
                 <button onclick="showDeleteForm(this)">Delete</button>
             </td>
         </tr>
@@ -172,7 +171,7 @@
             <td>$6.00</td>
             <td>200</td>
             <td>
-                <button onclick="showPlantForm('Edit')">Edit</button>
+                <button onclick="showPlantForm(this, 'Edit')">Edit</button>
                 <button onclick="showDeleteForm(this)">Delete</button>
             </td>
         </tr>
@@ -185,7 +184,7 @@
             <td>$18.00</td>
             <td>80</td>
             <td>
-                <button onclick="showPlantForm('Edit')">Edit</button>
+                <button onclick="showPlantForm(this, 'Edit')">Edit</button>
                 <button onclick="showDeleteForm(this)">Delete</button>
             </td>
         </tr>
@@ -198,7 +197,7 @@
             <td>$7.50</td>
             <td>150</td>
             <td>
-                <button onclick="showPlantForm('Edit')">Edit</button>
+                <button onclick="showPlantForm(this, 'Edit')">Edit</button>
                 <button onclick="showDeleteForm(this)">Delete</button>
             </td>
         </tr>
@@ -211,7 +210,7 @@
             <td>$27.00</td>
             <td>20</td>
             <td>
-                <button onclick="showPlantForm('Edit')">Edit</button>
+                <button onclick="showPlantForm(this, 'Edit')">Edit</button>
                 <button onclick="showDeleteForm(this)">Delete</button>
             </td>
         </tr>
