@@ -15,6 +15,7 @@
             <li><a href="orders.html">Orders</a></li>
             <li><a href="plants.html">Plants</a></li>
             <li><a href="suppliers.html">Suppliers</a></li>
+            <li><a href="plantssuppliers.html">Plants Suppliers</a></li>
         </ul>
     </nav>
 
@@ -44,29 +45,30 @@
     <div id="orderFormContainer" style="display: none;">
         <h3>Add / Edit Order</h3>
         <form id="orderForm">
-            <label for="orderID">Order ID:</label>
-            <input type="number" id="orderID" readonly><br><br>
+            <fieldset>
+            <nobr><label for="orderID">Order ID:</label>
+            <input type="number" id="orderID" readonly></nobr>
 
-            <label for="orderDate">Order Date:</label>
-            <input type="datetime-local" id="orderDate"><br><br>
+            <nobr><label for="orderDate">Order Date:</label>
+            <input type="datetime-local" id="orderDate"></nobr>
 
-            <label for="orderPrice">Order Price:</label>
-            <input type="number" id="orderPrice" step="0.01"><br><br>
+            <nobr><label for="orderPrice">Order Price:</label>
+            <input type="number" id="orderPrice" step="0.01"></nobr>
 
-            <label for="itemQuantity">Item Quantity:</label>
-            <input type="number" id="itemQuantity"><br><br>
+            <nobr><label for="itemQuantity">Item Quantity:</label>
+            <input type="number" id="itemQuantity"></nobr>
 
             <p>Plants in Order:</p>
             <ul id="plantsInOrderList">
             <!-- Added plants will be displayed here -->
             </ul>
 
-            <label for="isDelivery">Is Delivery:</label>
-            <input type="checkbox" id="isDelivery"><br><br>
+            <nobr><label for="isDelivery">Is Delivery:</label>
+            <input type="checkbox" id="isDelivery"></nobr>
 
-            <label for="customerID">Customer ID:</label>
-            <input type="number" id="customerID"><br><br>
-
+            <nobr><label for="customerID">Customer ID:</label>
+            <input type="number" id="customerID"></nobr>
+        </fieldset>
             <button type="button" onclick="addOrUpdateOrder()">Save Order</button>
             <button type="button" onclick="hideOrderForm()">Cancel</button>
         </form>
@@ -94,7 +96,7 @@
             document.getElementById("orderFormContainer").style.display = "block";
             document.getElementById("orderForm").reset();
             document.getElementById("orderID").value = "";
-            document.getElementByID("plantsInOrderList").innerHTML = "";
+            document.getElementById("plantsInOrderList").innerHTML = "";
         }
 
         function hideOrderForm() {
@@ -161,6 +163,12 @@
                 document.getElementById("itemQuantity").value = order.itemQuantity;
                 document.getElementById("isDelivery").checked = order.isDelivery;
                 document.getElementById("customerID").value = order.customerID;
+
+                const itemsForOrder = orderItems.filter(item => item.orderID === orderID);
+                document.getElementById("plantsInOrderList").innerHTML = itemsForOrder.map(item => {
+                    const plant = plants.find(p => p.plantID === item.plantID);
+                    return `<li>${plant.plantTypeName} - Quantity: ${item.quantity}</li>`;
+                }).join('');
             }
         }
 
