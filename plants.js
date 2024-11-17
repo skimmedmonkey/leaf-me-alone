@@ -29,7 +29,7 @@ function editPlant(plantID) {
 
     document.getElementById("plantID").value = plant.plantID;
     document.getElementById("plantName").value = plant.plantName;
-    document.getElementById("plantDescription").value = plant.plantDescription;
+    document.getElementById("plantType").value = plant.plantType;
     document.getElementById("plantMaturity").value = plant.plantMaturity;
     document.getElementById("plantPrice").checked = plant.plantPrice;
     document.getElementById("plantCost").value = plant.plantCost;
@@ -40,7 +40,10 @@ function editPlant(plantID) {
 }
 
 function showPlantForm() {
+    populatePlantTypesSelectMenu()
     document.getElementById("plantFormContainer").style.display = "block";
+    
+
 }
 
 function hidePlantForm() {
@@ -54,7 +57,7 @@ async function addOrUpdatePlantInData() {
     
     const plantID = document.getElementById("plantID").value 
     const plantName = document.getElementById("plantName").value 
-    const plantDescription = document.getElementById("plantDescription").value 
+    const plantType = document.getElementById("plantType").value 
     const plantMaturity = document.getElementById("plantMaturity").value 
     const plantPrice = document.getElementById("plantPrice").checked 
     const plantCost = document.getElementById("plantCost").value 
@@ -63,7 +66,7 @@ async function addOrUpdatePlantInData() {
     const plantRecord = {
         plantID,
         plantName,
-        plantDescription,
+        plantType,
         plantMaturity,
         plantPrice,
         plantCost,
@@ -108,7 +111,7 @@ function displayPlants() {
         const row = tableBody.insertRow();
         row.insertCell(0).innerText = plant.plantID;
         row.insertCell(1).innerText = plant.plantName;
-        row.insertCell(2).innerText = plant.plantDescription
+        row.insertCell(2).innerText = plant.plantType
         row.insertCell(3).innerText = plant.plantMaturity;
         row.insertCell(4).innerText = `$${plant.plantPrice.toFixed(2)}`
         row.insertCell(5).innerText = `$${plant.plantCost.toFixed(2)}`
@@ -153,8 +156,20 @@ function removePlantFromData() {
 
 }
 
-async function getPlantTypes (){
-    const response = fetch(`/plantTypes`);
+async function populatePlantTypesSelectMenu (){
+
+    const selectElement = document.getElementById("plantType")
+    selectElement.innerHTML = '';
+    
+    const response = await fetch(`/plantTypes`);
+    const items = await response.json()
+
+    items.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item.value;
+        option.textContent = item.value;
+        selectElement.appendChild(option);
+    });
 
 }
 
