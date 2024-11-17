@@ -6,124 +6,7 @@
     <link rel="stylesheet" href="style.css">
     <title>Plants</title>
 </head>
-<script language="JavaScript">
-    function showPlantForm(button, action){
-        const container = document.getElementById('form-space');
-        container.innerHTML = '' //Clear this section
-
-        const form = document.createElement('form');
-        const legend = document.createElement('legend');
-        legend.innerHTML = `<strong>${action} Plant</strong>`;
-        form.appendChild(legend);
-
-        const fieldset = document.createElement('fieldset');
-
-        const createInputField = (labelText, inputType, inputName, tableFieldIndex) => {
-            const label = document.createElement('label');
-            label.textContent = labelText;
-            const input = document.createElement('input');
-            input.type = inputType;
-            input.name = inputName;
-            if (action === 'Edit'){ // Set the default value of the field to current value in table
-                const row = button.parentElement.parentElement;
-                const cells = row.getElementsByTagName('td');
-                input.value = cells[tableFieldIndex].textContent;
-            }
-            fieldset.appendChild(label);
-            fieldset.appendChild(input);
-        };
-
-
-        const typeDescriptions = ["Fruit", "Succulent", "Flower", "Tree", "Cactus"];
-        const maturityLevels = ["Seedling", "Young", "Mature"];
-
-        const createDropdownField = (labelText, inputName, optionsArray) => {
-            const label = document.createElement('label');
-            label.textContent = labelText;
-            const select = document.createElement('select');
-            select.name = inputName;
-
-            optionsArray.forEach(optionValue => {
-                const option = document.createElement('option');
-                option.value = optionValue;
-                option.textContent = optionValue;
-                select.appendChild(option);
-            });
-            fieldset.appendChild(label);
-            fieldset.appendChild(select);
-        };
-
-        createInputField('Name', 'text', 'name', 1);
-        createDropdownField('Type Description', 'description', typeDescriptions);
-        createDropdownField('Maturity', 'maturity', maturityLevels);
-        createInputField('Price', 'text', 'price', 4);
-        createInputField('Cost', 'text', 'cost', 5);
-        createInputField('Inventory', 'number', 'inventory', 6);
-
-        form.appendChild(fieldset);
-
-        const btns =  document.createElement('div');
-
-        const submitBtn = document.createElement('input');
-        submitBtn.className = 'btn';
-        submitBtn.type = 'submit';
-        submitBtn.value = `${action} Plant`;
-        btns.appendChild(submitBtn)
-
-        const cancelBtn = document.createElement('input')
-        cancelBtn.className = 'btn';
-        cancelBtn.type = 'submit';
-        cancelBtn.value = 'Cancel'
-        cancelBtn.onclick = () => (container.innerHTML = '')
-        btns.appendChild(cancelBtn)
-
-        form.appendChild(btns);
-        container.appendChild(form)
-    }
-
-    function showDeleteForm(button) {
-        const container = document.getElementById('form-space');
-        container.innerHTML = '' //Clear this section
-
-        const form = document.createElement('form');
-        const legend = document.createElement('legend');
-        legend.innerHTML = `<strong>Delete Plant</strong>`;
-        form.appendChild(legend)
-        
-        confirmation = document.createElement('p')
-        confirmation.innerHTML = "Are you sure you want to delete the following plant?"
-        form.appendChild(confirmation)
-
-        const row = button.parentElement.parentElement;
-        const cells = row.getElementsByTagName('td');
-        const id = cells[0].textContent;
-        const name = cells[1].textContent;
-
-        deletingPlant = document.createElement('p')
-        deletingPlant.innerHTML = `ID: ${id}, Name: ${name}`
-        form.appendChild(deletingPlant)
-
-        const btns =  document.createElement('div');
-        
-        input = document.createElement('input');
-        input.type ="submit"
-        input.className = "btn"
-        input.value = "Delete Plant"
-        btns.appendChild(input)
-
-        const cancelBtn = document.createElement('input')
-        cancelBtn.className = 'btn';
-        cancelBtn.type = 'submit';
-        cancelBtn.value = 'Cancel'
-        cancelBtn.onclick = () => (container.innerHTML = '')
-        btns.appendChild(cancelBtn)
-
-        form.appendChild(btns);
-        container.appendChild(form)
-    }
-
-
-</script>
+<script src="plants.js"> </script>
 <body>
     <h1>Leaf Me Alone</h1>
     <nav>
@@ -137,85 +20,64 @@
         </ul>
     </nav>
     <h2>Plant Inventory</h2>
-    <button onclick="showPlantForm('Add')">Add</button>
+    <button onclick="showPlantForm()">Add</button>
     <table>
-        <tr>
-            <th>ID</th>
-            <th>Type Name</th>
-            <th>Type Description</th>
-            <th>Maturity</th>
-            <th>Price</th>
-            <th>Cost</th>
-            <th>Inventory</th>
-            <th></th>
-        </tr>
-        <tr>
-            <td>1</td>
-            <td>Raspberry</td>
-            <td>Fruit</td>
-            <td>Mature</td>
-            <td>$25.99</td>
-            <td>$15.00</td>
-            <td>50</td>
-            <td>
-                <button onclick="showPlantForm(this, 'Edit')">Edit</button>
-                <button onclick="showDeleteForm(this)">Delete</button>
-            </td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td>Jade</td>
-            <td>Succulent</td>
-            <td>Seedling</td>
-            <td>$10.50</td>
-            <td>$6.00</td>
-            <td>200</td>
-            <td>
-                <button onclick="showPlantForm(this, 'Edit')">Edit</button>
-                <button onclick="showDeleteForm(this)">Delete</button>
-            </td>
-        </tr>
-        <tr>
-            <td>3</td>
-            <td>Tulip</td>
-            <td>Flower</td>
-            <td>Mature</td>
-            <td>$30.75</td>
-            <td>$18.00</td>
-            <td>80</td>
-            <td>
-                <button onclick="showPlantForm(this, 'Edit')">Edit</button>
-                <button onclick="showDeleteForm(this)">Delete</button>
-            </td>
-        </tr>
-        <tr>
-            <td>4</td>
-            <td>Oak Tree</td>
-            <td>Tree</td>
-            <td>Seedling</td>
-            <td>$12.25</td>
-            <td>$7.50</td>
-            <td>150</td>
-            <td>
-                <button onclick="showPlantForm(this, 'Edit')">Edit</button>
-                <button onclick="showDeleteForm(this)">Delete</button>
-            </td>
-        </tr>
-        <tr>
-            <td>5</td>
-            <td>Saguaro</td>
-            <td>Cactus</td>
-            <td>Mature</td>
-            <td>$45.00</td>
-            <td>$27.00</td>
-            <td>20</td>
-            <td>
-                <button onclick="showPlantForm(this, 'Edit')">Edit</button>
-                <button onclick="showDeleteForm(this)">Delete</button>
-            </td>
-        </tr>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Type Name</th>
+                <th>Type Description</th>
+                <th>Maturity</th>
+                <th>Price</th>
+                <th>Cost</th>
+                <th>Inventory</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <!--Insert plant data here  -->
+        </tbody>
+                
     </table>
-    <p></p>
-    <div id="form-space" style="display: block"></div>
+    <div id="plantFormContainer" style="display: none;">
+        <h3 id="formHeader"></h3>
+        <form id="plantForm" data-mode="">
+            <fieldset>
+            <nobr><label for="plantID">Plant ID:</label>
+            <input type="number" id="plantID" readonly></nobr>
+            
+            <nobr><label for="plantName">Name:</label>
+            <select type="text" id="typeName"></select></nobr>
+            
+            <nobr><label for="plantDescription">Description:</label>
+            <input type="text" id="typeDescription"></nobr>
+            
+            <nobr><label for="plantMaturity">Maturity:</label>
+            <input type="text" id="Maturity"></nobr>
+            
+            <nobr><label for="plantPrice">Price:</label>
+            <input type="number" id="Price"></nobr>
+
+            <nobr><label for="plantCost">Cost:</label>
+            <input type="number" id="Cost"></nobr>
+
+            <nobr><label for="plantInventory">Inventory:</label>
+            <input type="number" id="Inventory"></nobr>
+
+        </fieldset>
+            <button type="button" onclick="addOrUpdatePlantInData()">Save Plant</button>
+            <button type="button" onclick="hidePlantForm()">Cancel</button>
+        </form>
+    </div>
+
+    <div id="deleteFormContainer" style="display: none;">
+        <h3>Delete Plant</h3>
+        <form id="deleteForm">
+            <p id="deletePlantConfirmation"></p>
+            <button type="button" onclick="removePlantFromData()">Delete Order</button>
+            <button type="button" onclick="hideDeleteForm()">Cancel</button>
+        </form>
+    </div>
 </body>
 </html>
+
