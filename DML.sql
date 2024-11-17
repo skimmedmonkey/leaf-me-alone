@@ -23,6 +23,10 @@ LEFT JOIN dbo.OrderItems oi ON o.orderID = oi.orderID
 LEFT JOIN dbo.Plants p ON oi.plantID = p.plantID
 GROUP BY o.orderID
 
+--Plants Suppliers
+SELECT plantID, supplierID 
+FROM dbo.PlantsSuppliers
+
 -------------INSERT STATEMENTS------------
 
 --Customer form data
@@ -66,6 +70,12 @@ INSERT INTO dbo.OrderItems
     (orderID, plantID, quantity)
 VALUES
     (:orderID, :plantIDInput, :quantityInput);
+
+--PlantsSuppliers data
+INSERT INTO dbo.PlantsSuppliers
+    (plantID, supplierID)
+VALUES
+    (:plantIDInput, :supplierIDInput)
 
 -------------DELETE STATEMENTS------------
 

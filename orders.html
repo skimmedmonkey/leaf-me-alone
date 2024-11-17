@@ -119,6 +119,8 @@
             const customerID = parseInt(document.getElementById("customerID").value);
 
             const existingOrderIndex = orders.findIndex(order => order.orderID === orderID);
+            
+            // Run update statement in database
 
             if (existingOrderIndex >= 0) {
                 orders[existingOrderIndex] = { orderID, orderDate, orderPrice, itemQuantity, isDelivery, customerID };
@@ -131,6 +133,8 @@
         }
 
         function displayOrders() {
+
+            //orders object will be data from database
             const tableBody = document.getElementById("ordersTable").getElementsByTagName("tbody")[0];
             tableBody.innerHTML = "";
 
@@ -160,6 +164,7 @@
         }
 
         function editOrder(orderID) {
+            
             const order = orders.find(order => order.orderID === orderID);
             if (order) {
                 showOrderForm();
@@ -199,6 +204,7 @@
         function removeOrderFromData(orderID) {
 
             // SQL code to remove order from mySQLtable
+            
             displayOrders() // This should probably refetch results?
             hideDeleteForm()
 
