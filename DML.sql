@@ -27,6 +27,12 @@ GROUP BY o.orderID
 SELECT plantID, supplierID 
 FROM dbo.PlantsSuppliers
 
+--Plant Types
+SELECT plantTypeName FROM dbo.PlantTypes
+
+--Populate maturity dropdown
+SELECT DISTINCT plantMaturity FROM dbo.Plants
+
 -------------INSERT STATEMENTS------------
 
 --Customer form data
