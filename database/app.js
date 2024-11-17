@@ -14,8 +14,27 @@ PORT        = 9124;                 // Set a port number at the top so it's easy
 */
 app.get('/', function(req, res)                 // This is the basic syntax for what is called a 'route'
     {
+        // Return index page?
         res.send("The server is running!")      // This function literally sends the string "The server is running!" to the computer
-    });                                         // requesting the web site.
+    });    
+    
+app.get('/plants', function(req, res)                 
+    {
+        // Retrieve all plants
+        res.send("The server is running!")      
+    });   
+
+app.put('/plants/:_id', function(req, res)                 
+    {
+        //Update plant with :_id
+        res.send("The server is running!")      
+    });    
+
+app.delete('/plants/:_id', function(req, res)                 
+    {
+        // Delete plant with :_id
+        res.send("The server is running!")      
+    });    
 
 /*
     LISTENER

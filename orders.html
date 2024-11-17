@@ -98,6 +98,12 @@
             { plantID: 3, plantTypeID: 103, plantTypeName: "Tulip", plantPrice: 30.75 },
         ];
 
+        function getOrders() {
+            const response = fetch('/orders');
+            const orders = response.json();
+            return orders;
+        }
+
         function showOrderForm() {
             document.getElementById("orderFormContainer").style.display = "block";
             document.getElementById("orderForm").reset();
@@ -204,7 +210,7 @@
         function removeOrderFromData(orderID) {
 
             // SQL code to remove order from mySQLtable
-            
+
             displayOrders() // This should probably refetch results?
             hideDeleteForm()
 
