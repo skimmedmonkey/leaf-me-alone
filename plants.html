@@ -7,6 +7,39 @@
     <title>Plants</title>
 </head>
 <script language="JavaScript">
+    window.onload = function() {
+        fetch('http://flip4.engr.oregonstate.edu:5757/plants')  // Make a GET request to the /plants endpoint
+            .then(response => response.json())  // Parse the response as JSON
+            .then(plants => {
+                // Get the table body element
+                const tableBody = document.getElementById('plants-table-body');
+
+                // Loop over the plant data and create table rows dynamically
+                plants.forEach(plant => {
+                    const row = document.createElement('tr');
+                    
+                    // Create and append each table cell (td) with plant data
+                    row.innerHTML = `
+                        <td>${plant.plantID}</td>
+                        <td>${plant.plantName}</td>
+                        <td>${plant.plantTypeName}</td>
+                        <td>${plant.plantMaturity}</td>
+                        <td>${plant.plantPrice}</td>
+                        <td>${plant.plantCost}</td>
+                        <td>${plant.plantInventory}</td>
+                        <td>
+                            <button onclick="showPlantForm(this, 'Edit')">Edit</button>
+                            <button onclick="showDeleteForm(this)">Delete</button>
+                        </td>
+                    `;
+                    
+                    // Append the row to the table
+                    tableBody.appendChild(row);
+                });
+            })
+            .catch(err => console.error('Error fetching plant data:', err));
+    };
+
     function showPlantForm(button, action){
         const container = document.getElementById('form-space');
         container.innerHTML = '' //Clear this section
@@ -139,81 +172,21 @@
     <h2>Plant Inventory</h2>
     <button onclick="showPlantForm('Add')">Add</button>
     <table>
-        <tr>
-            <th>ID</th>
-            <th>Type Name</th>
-            <th>Type Description</th>
-            <th>Maturity</th>
-            <th>Price</th>
-            <th>Cost</th>
-            <th>Inventory</th>
-            <th></th>
-        </tr>
-        <tr>
-            <td>1</td>
-            <td>Raspberry</td>
-            <td>Fruit</td>
-            <td>Mature</td>
-            <td>$25.99</td>
-            <td>$15.00</td>
-            <td>50</td>
-            <td>
-                <button onclick="showPlantForm(this, 'Edit')">Edit</button>
-                <button onclick="showDeleteForm(this)">Delete</button>
-            </td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td>Jade</td>
-            <td>Succulent</td>
-            <td>Seedling</td>
-            <td>$10.50</td>
-            <td>$6.00</td>
-            <td>200</td>
-            <td>
-                <button onclick="showPlantForm(this, 'Edit')">Edit</button>
-                <button onclick="showDeleteForm(this)">Delete</button>
-            </td>
-        </tr>
-        <tr>
-            <td>3</td>
-            <td>Tulip</td>
-            <td>Flower</td>
-            <td>Mature</td>
-            <td>$30.75</td>
-            <td>$18.00</td>
-            <td>80</td>
-            <td>
-                <button onclick="showPlantForm(this, 'Edit')">Edit</button>
-                <button onclick="showDeleteForm(this)">Delete</button>
-            </td>
-        </tr>
-        <tr>
-            <td>4</td>
-            <td>Oak Tree</td>
-            <td>Tree</td>
-            <td>Seedling</td>
-            <td>$12.25</td>
-            <td>$7.50</td>
-            <td>150</td>
-            <td>
-                <button onclick="showPlantForm(this, 'Edit')">Edit</button>
-                <button onclick="showDeleteForm(this)">Delete</button>
-            </td>
-        </tr>
-        <tr>
-            <td>5</td>
-            <td>Saguaro</td>
-            <td>Cactus</td>
-            <td>Mature</td>
-            <td>$45.00</td>
-            <td>$27.00</td>
-            <td>20</td>
-            <td>
-                <button onclick="showPlantForm(this, 'Edit')">Edit</button>
-                <button onclick="showDeleteForm(this)">Delete</button>
-            </td>
-        </tr>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Type Name</th>
+                <th>Type Description</th>
+                <th>Maturity</th>
+                <th>Price</th>
+                <th>Cost</th>
+                <th>Inventory</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="plants-table-body">
+            <!-- Plants shown dynamically with javascript-->
+        </tbody>
     </table>
     <p></p>
     <div id="form-space" style="display: block"></div>

@@ -15,7 +15,7 @@
 var express = require('express');   // We are using the express library for the web server
 var app     = express();            // We need to instantiate an express object to interact with the server in our code
 PORT        = 5757;                 // Set a port number at the top so it's easy to change in the future
-
+app.use(express.static('public'));
 
 // Database
 var db = require('./database/db-connector')
@@ -33,14 +33,36 @@ app.set('view engine', '.hbs');                 // Tell express to use the handl
 app.get('/', function(req, res)                 // This is the basic syntax for what is called a 'route'
     {
         // Return index page?
-        res.render('index', {message: "Hello from the server!"});      // This function literally sends the string "The server is running!" to the computer
+        res.render('index');      // This function literally sends the string "The server is running!" to the computer
     });    
+ 
     
-app.get('/plants', function(req, res)                 
-    {
-        // Retrieve all plants
-        res.send("The plants server is running!");    
+    app.get('/plants', function(req, res) {
+        let query1 = `
+            SELECT 
+                p.plantID,
+                p.plantName,
+                pt.plantTypeName,
+                p.plantMaturity,
+                p.plantPrice,
+                p.plantCost,
+                p.plantInventory
+            FROM 
+                Plants p
+            JOIN 
+                PlantTypes pt ON p.plantTypeID = pt.plantTypeID
+        `;
+        
+        db.pool.query(query1, function(error, rows, fields){
+            if (error) {
+                console.error("Error executing query:", error);
+                res.status(500).send("Error retrieving plants.");
+            } else {
+                res.render('plants', {data: rows});
+            }
+        });
     });
+    
 
 app.put('/plants/:_id', function(req, res)                 
     {
