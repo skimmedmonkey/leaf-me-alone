@@ -42,7 +42,6 @@ function editPlant(plantID) {
 function showPlantForm() {
     populatePlantTypesSelectMenu()
     document.getElementById("plantFormContainer").style.display = "block";
-    
 
 }
 
@@ -172,7 +171,6 @@ async function populatePlantTypesSelectMenu (){
     });
 
 }
-
 
 window.onload = function() {
     updatePlantData();
