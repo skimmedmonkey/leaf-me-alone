@@ -30,6 +30,25 @@ app.set('view engine', '.hbs');                 // Tell express to use the handl
 /*
     ROUTES
 */
+
+app.delete('/plants/:_id', function(req, res)                 
+    {
+        console.log('received delete request')
+        let query1 = `
+        DELETE FROM Plants WHERE plantID = ${req.params._id}
+    `;
+    
+    db.pool.query(query1, function(error, rows){
+        if (error) {
+            console.error("Error executing query:", error);
+            res.status(500).send("Error Deleting Plant.");
+        } else {
+            res.status(204).send("Plant successfully deleted")
+        }
+    });
+    
+    });   
+
 app.get('/', function(req, res)                 // This is the basic syntax for what is called a 'route'
     {
         // Return index page?
@@ -37,31 +56,31 @@ app.get('/', function(req, res)                 // This is the basic syntax for 
     });    
  
     
-    app.get('/plants', function(req, res) {
-        let query1 = `
-            SELECT 
-                p.plantID,
-                p.plantName,
-                pt.plantTypeName,
-                p.plantMaturity,
-                p.plantPrice,
-                p.plantCost,
-                p.plantInventory
-            FROM 
-                Plants p
-            JOIN 
-                PlantTypes pt ON p.plantTypeID = pt.plantTypeID
-        `;
-        
-        db.pool.query(query1, function(error, rows, fields){
-            if (error) {
-                console.error("Error executing query:", error);
-                res.status(500).send("Error retrieving plants.");
-            } else {
-                res.render('plants', {data: rows});
-            }
-        });
+app.get('/plants', function(req, res) {
+    let query1 = `
+        SELECT 
+            p.plantID,
+            p.plantName,
+            pt.plantTypeName,
+            p.plantMaturity,
+            p.plantPrice,
+            p.plantCost,
+            p.plantInventory
+        FROM 
+            Plants p
+        JOIN 
+            PlantTypes pt ON p.plantTypeID = pt.plantTypeID
+    `;
+    
+    db.pool.query(query1, function(error, rows, fields){
+        if (error) {
+            console.error("Error executing query:", error);
+            res.status(500).send("Error retrieving plants.");
+        } else {
+            res.render('plants', {data: rows});
+        }
     });
+});
     
 
 app.put('/plants/:_id', function(req, res)                 
@@ -70,11 +89,7 @@ app.put('/plants/:_id', function(req, res)
         res.send("The server is running!");      
     });    
 
-app.delete('/plants/:_id', function(req, res)                 
-    {
-        // Delete plant with :_id
-        res.send("The server is running!");      
-    });    
+ 
 
 /*
     LISTENER
