@@ -1,4 +1,4 @@
-<h1>Leaf Me Alone</h1>
+<h2>Plants</h2>
     <script src="plants.js"> </script>
     <button onclick="addPlant()">Add</button>
     <table>
@@ -42,7 +42,11 @@
             <input type="text" id="plantName"></nobr>
             
             <nobr><label for="plantType">Type:</label>
-            <select type="text" id="plantType"></select></nobr>
+            <select type="text" id="plantType" name="plantType">
+                {{#each plantTypes}}
+                <option value="{{this.plantTypeID}}">{{this.plantTypeName}}</option>
+                {{/each}}
+            </select></nobr>
             
             <nobr><label for="plantMaturity">Maturity:</label>
             <input type="text" id="plantMaturity"></nobr>

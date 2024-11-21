@@ -109,9 +109,12 @@ async function addOrUpdatePlantInData() {
     }
     else if (mode === 'add'){
 
-        // For 
-        const response = await fetch(`/plants/${plantID}`, {
-            method: POST,
+        // For Steve
+        const response = await fetch(`/plants/add`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify(plantRecord)
         });
 
@@ -121,6 +124,7 @@ async function addOrUpdatePlantInData() {
     }
 
     hidePlantForm();
+    location.reload();
     
 }
 

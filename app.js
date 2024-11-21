@@ -26,6 +26,9 @@ var exphbs = require('express-handlebars');     // Import express-handlebars
 app.engine('.hbs', engine({extname: ".hbs"}));  // Create an instance of the handlebars engine to process templates
 app.set('view engine', '.hbs');                 // Tell express to use the handlebars engine whenever it encounters a *.hbs file.
 
+app.use(express.json())
+app.use(express.urlencoded({extended: true}))
+app.use(express.static('public'))
 
 /*
     ROUTES
@@ -53,8 +56,31 @@ app.get('/', function(req, res)                 // This is the basic syntax for 
     {
         // Return index page?
         res.render('index');      // This function literally sends the string "The server is running!" to the computer
-    });    
- 
+    });
+
+app.get('/customers', function(req, res)                 // This is the basic syntax for what is called a 'route'
+{
+    // Return index page?
+    res.render('customers');      // This function literally sends the string "The server is running!" to the computer
+});   
+
+app.get('/orders', function(req, res)                 // This is the basic syntax for what is called a 'route'
+{
+    // Return index page?
+    res.render('orders');      // This function literally sends the string "The server is running!" to the computer
+});
+
+app.get('/plantssuppliers', function(req, res)                 // This is the basic syntax for what is called a 'route'
+{
+    // Return index page?
+    res.render('plantssuppliers');      // This function literally sends the string "The server is running!" to the computer
+});
+
+app.get('/suppliers', function(req, res)                 // This is the basic syntax for what is called a 'route'
+{
+    // Return index page?
+    res.render('suppliers');      // This function literally sends the string "The server is running!" to the computer
+});
     
 app.get('/plants', function(req, res) {
     let query1 = `
@@ -71,14 +97,26 @@ app.get('/plants', function(req, res) {
         JOIN 
             PlantTypes pt ON p.plantTypeID = pt.plantTypeID
     `;
-    
+    let query2 = "SELECT plantTypeID, plantTypeName FROM PlantTypes";
+
     db.pool.query(query1, function(error, rows, fields){
         if (error) {
             console.error("Error executing query:", error);
             res.status(500).send("Error retrieving plants.");
-        } else {
-            res.render('plants', {data: rows});
-        }
+            return;
+        } 
+        db.pool.query(query2, function(error, plantTypeRows, fields) {
+            if (error) {
+                console.error("Error executing query for plant types:", error);
+                res.status(500).send("Error retrieving plant types.");
+                return;
+            }
+
+            res.render('plants', {
+                data: rows,
+                plantTypes: plantTypeRows
+            });
+        });
     });
 });
     
@@ -89,11 +127,31 @@ app.put('/plants/:_id', function(req, res)
         res.send("The server is running!");      
     });    
 
- 
+app.post('/plants/add', function(req, res)
+{
+    const data = req.body;
+
+    // Use the plantTypeID passed from the form
+    const query1 = `
+        INSERT INTO Plants 
+        (plantName, plantTypeID, plantMaturity, plantPrice, plantCost, plantInventory) 
+        VALUES 
+        ('${data.plantName}', '${data.plantType}', '${data.plantMaturity}', '${data.plantPrice}', '${data.plantCost}', '${data.plantInventory}')
+    `;
+
+    db.pool.query(query1, function(error, rows, fields) {
+        if (error) {
+            console.log(error);
+            res.sendStatus(400);  // Error handling
+        } else {
+            res.render('plants');  // Redirect to the plants list page
+        }
+    });
+});
 
 /*
     LISTENER
 */
 app.listen(PORT, function(){            // This is the basic syntax for what is called the 'listener' which receives incoming requests on the specified PORT.
-    console.log('Express started on http://flip1.engr.oregonstate.edu:' + PORT + '; press Ctrl-C to terminate.')
+    console.log('Express started on http://classwork.engr.oregonstate.edu:' + PORT + '; press Ctrl-C to terminate.')
 });
