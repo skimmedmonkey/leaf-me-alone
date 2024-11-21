@@ -53,7 +53,7 @@ function editPlant(editButton) {
 
 function showPlantForm() {
     //populatePlantTypesSelectMenu()
-    document.getElementById("plantFormContainer")
+    document.getElementById("plantFormContainer").style.display = "block";
 
 }
 
