@@ -31,16 +31,21 @@ function editPlant(editButton) {
         plantInventory: row.children[6].textContent.trim(),
     };
 
-    console.log(plantRow)
-
     // Update form fields
     document.getElementById("plantID").value = plantRow.plantID;
     document.getElementById("plantName").value = plantRow.plantName;
-    document.getElementById("plantType").value = plantRow.plantTypeName;
     document.getElementById("plantMaturity").value = plantRow.plantMaturity;
     document.getElementById("plantPrice").value = plantRow.plantPrice;
     document.getElementById("plantCost").value = plantRow.plantCost;
     document.getElementById("plantInventory").value = plantRow.plantInventory;
+
+    // Plant type select menu must be handled differently
+    const selectElement = document.getElementById("plantType")
+    Array.from(selectElement.children).forEach(option => {
+        if (option.innerHTML = plantRow.plantTypeName){
+            option.selected="selected"
+        }
+    })
 
     showPlantForm();
     
@@ -80,16 +85,16 @@ async function addOrUpdatePlantInData() {
     
     const plantID = document.getElementById("plantID").value 
     const plantName = document.getElementById("plantName").value 
-    const plantType = document.getElementById("plantType").value 
+    const plantTypeID = document.getElementById("plantType").value 
     const plantMaturity = document.getElementById("plantMaturity").value 
-    const plantPrice = document.getElementById("plantPrice").checked 
+    const plantPrice = document.getElementById("plantPrice").value
     const plantCost = document.getElementById("plantCost").value 
     const plantInventory = document.getElementById("plantInventory").value
 
     const plantRecord = {
         plantID,
         plantName,
-        plantType,
+        plantTypeID,
         plantMaturity,
         plantPrice,
         plantCost,
@@ -98,8 +103,12 @@ async function addOrUpdatePlantInData() {
 
     if (mode === 'edit'){
         // For Ben
-        const response = await fetch(`/plants/${plantID}`, {
-            method: PUT,
+        console.log('Received edit request')
+        const response = await fetch(`/plants/edit`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify(plantRecord)
         });
 
@@ -139,24 +148,8 @@ async function removePlantFromData() {
         throw new Error(`Delete failed: ${response.status}`);
     }
     
-    console.log(response)
     hideDeleteForm();
+    location.reload();
 
 }
 
-async function populatePlantTypesSelectMenu (){
-
-    const selectElement = document.getElementById("plantType")
-    selectElement.innerHTML = '';
-    
-    const response = await fetch(`/plantTypes`);
-    const items = await response.json()
-
-    items.forEach(item => {
-        const option = document.createElement('option');
-        option.value = item.value;
-        option.textContent = item.value;
-        selectElement.appendChild(option);
-    });
-
-}

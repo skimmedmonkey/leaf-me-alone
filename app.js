@@ -34,24 +34,6 @@ app.use(express.static('public'))
     ROUTES
 */
 
-app.delete('/plants/:_id', function(req, res)                 
-    {
-        console.log('received delete request')
-        let query1 = `
-        DELETE FROM Plants WHERE plantID = ${req.params._id}
-    `;
-    
-    db.pool.query(query1, function(error, rows){
-        if (error) {
-            console.error("Error executing query:", error);
-            res.status(500).send("Error Deleting Plant.");
-        } else {
-            res.status(204).send("Plant successfully deleted")
-        }
-    });
-    
-    });   
-
 app.get('/', function(req, res)                 // This is the basic syntax for what is called a 'route'
     {
         // Return index page?
@@ -83,6 +65,9 @@ app.get('/suppliers', function(req, res)                 // This is the basic sy
 });
     
 app.get('/plants', function(req, res) {
+
+    console.log('received select request')
+
     let query1 = `
         SELECT 
             p.plantID,
@@ -121,14 +106,30 @@ app.get('/plants', function(req, res) {
 });
     
 
-app.put('/plants/:_id', function(req, res)                 
+app.put('/plants/edit', function(req, res)                 
     {
-        //Update plant with :_id
-        res.send("The server is running!");      
-    });    
+        console.log('received edit request')
+        const data = req.body;
+        const query1 = `UPDATE Plants
+            SET
+                plantName = '${data.plantName}', plantTypeID = '${data.plantTypeID}', plantMaturity = '${data.plantMaturity}', plantPrice = '${data.plantPrice}', plantCost = '${data.plantCost}', plantInventory = '${data.plantInventory}'
+            WHERE
+                plantID = ${data.plantID}`
 
+        db.pool.query(query1, function(error, rows, fields) {
+            if (error) {
+                console.log(error);
+                res.sendStatus(400);  // Error handling
+            } else {
+                res.render('plants');  // Redirect to the plants list page
+            }
+        });
+            
+    });    
+ 
 app.post('/plants/add', function(req, res)
 {
+    console.log('received add request')
     const data = req.body;
 
     // Use the plantTypeID passed from the form
@@ -136,7 +137,7 @@ app.post('/plants/add', function(req, res)
         INSERT INTO Plants 
         (plantName, plantTypeID, plantMaturity, plantPrice, plantCost, plantInventory) 
         VALUES 
-        ('${data.plantName}', '${data.plantType}', '${data.plantMaturity}', '${data.plantPrice}', '${data.plantCost}', '${data.plantInventory}')
+        ('${data.plantName}', '${data.plantTypeID}', '${data.plantMaturity}', '${data.plantPrice}', '${data.plantCost}', '${data.plantInventory}')
     `;
 
     db.pool.query(query1, function(error, rows, fields) {
@@ -148,6 +149,24 @@ app.post('/plants/add', function(req, res)
         }
     });
 });
+
+app.delete('/plants/:_id', function(req, res)                 
+    {
+        console.log('received delete request')
+        let query1 = `
+        DELETE FROM Plants WHERE plantID = ${req.params._id}
+    `;
+    
+    db.pool.query(query1, function(error, rows){
+        if (error) {
+            console.error("Error executing query:", error);
+            res.status(500).send("Error Deleting Plant.");
+        } else {
+            res.status(204).send("Plant successfully deleted")
+        }
+    });
+    
+    });   
 
 /*
     LISTENER
