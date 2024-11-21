@@ -42,7 +42,7 @@ function editPlant(editButton) {
     // Plant type select menu must be handled differently
     const selectElement = document.getElementById("plantType")
     Array.from(selectElement.children).forEach(option => {
-        if (option.innerHTML = plantRow.plantTypeName){
+        if (option.innerHTML === plantRow.plantTypeName){
             option.selected="selected"
         }
     })
