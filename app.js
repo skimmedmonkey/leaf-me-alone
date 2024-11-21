@@ -126,7 +126,7 @@ app.put('/plants/edit', function(req, res)
         });
             
     });    
- 
+
 app.post('/plants/add', function(req, res)
 {
     console.log('received add request')

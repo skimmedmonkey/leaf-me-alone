@@ -13,7 +13,7 @@ FROM dbo.Suppliers
 --Plant data
 SELECT p.plantID, p.plantName, pt.plantTypeName, p.plantTypeID, p.plantMaturity, p.plantPrice, p.plantCost, p.plantInventory
 FROM dbo.Plants p
-INNER JOIN dbo.PlantTypes pt
+JOIN dbo.PlantTypes pt
 ON p.plantTypeID = pt.id
 
 --Order data
@@ -28,7 +28,7 @@ SELECT plantID, supplierID
 FROM dbo.PlantsSuppliers
 
 --Plant Types
-SELECT plantTypeName FROM dbo.PlantTypes
+SELECT plantTypeID, plantTypeName FROM dbo.PlantTypes
 
 --Populate maturity dropdown
 SELECT DISTINCT plantMaturity FROM dbo.Plants
@@ -58,7 +58,7 @@ INSERT INTO dbo.Plants
 VALUES
     (   
         :pName,
-        (SELECT plantTypeID from dbo.PlantTypes where plantTypeName = :plantTypeNameInput),
+        :plantTypeIDInput,
         :plantMaturityInput,
         :plantPriceInput,
         :plantCostInput,
