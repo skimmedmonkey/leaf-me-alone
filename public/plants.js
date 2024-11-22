@@ -52,7 +52,6 @@ function editPlant(editButton) {
 }
 
 function showPlantForm() {
-    //populatePlantTypesSelectMenu()
     document.getElementById("plantFormContainer").style.display = "block";
 
 }
@@ -102,7 +101,7 @@ async function addOrUpdatePlantInData() {
     }
 
     if (mode === 'edit'){
-        // For Ben
+        // When mode is edit performs a PUT
         console.log('Received edit request')
         const response = await fetch(`/plants/edit`, {
             method: 'PUT',
@@ -118,7 +117,7 @@ async function addOrUpdatePlantInData() {
     }
     else if (mode === 'add'){
 
-        // For Steve
+        // When mode is add performs a POST
         const response = await fetch(`/plants/add`, {
             method: "POST",
             headers: {
@@ -138,7 +137,7 @@ async function addOrUpdatePlantInData() {
 }
 
 async function removePlantFromData() {
-
+    // DELETE from Plants Table
     console.log(plantIDForDelete)
     const response = await fetch(`/plants/${plantIDForDelete}`, {
         method: 'DELETE'
