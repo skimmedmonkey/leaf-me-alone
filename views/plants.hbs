@@ -1,0 +1,77 @@
+<h2>Plants</h2>
+    <script src="plants.js"> </script>
+    <button onclick="addPlant()">Add</button>
+    <table>
+        <thead>
+        <tr>
+            {{#each data.[0]}}
+    
+        <th>{{@key}}</th>
+
+        <!-- Loop over the 'plants' data passed from the server -->
+        {{/each}}
+        </tr>
+        </thead>
+        <tbody>
+            {{#each data}}
+            <tr>
+            <td>{{this.plantID}}</td>
+            <td>{{this.plantName}}</td>
+            <td>{{this.plantTypeName}}</td>
+            <td>{{this.plantMaturity}}</td>
+            <td>{{this.plantPrice}}</td>
+            <td>{{this.plantCost}}</td>
+            <td>{{this.plantInventory}}</td>
+            <td>
+                <button onclick="editPlant(this)">Edit</button>
+                <button onclick="deletePlant({{this.plantID}})">Delete</button>
+            </td>
+        </tr>
+        {{/each}}
+        </tbody>
+    </table>
+    <div id="form-space" style="display: block"></div>
+    <div id="plantFormContainer" style="display: none;">
+        <h3 id="formHeader"></h3>
+        <form id="plantForm" data-mode="">
+            <fieldset>
+            <nobr><label for="plantID"><!--Plant ID:--></label>
+            <input type="hidden" id="plantID" readonly></nobr>
+            
+            <nobr><label for="plantName">Name:</label>
+            <input type="text" id="plantName"></nobr>
+            
+            <nobr><label for="plantType">Type:</label>
+            <select type="text" id="plantType" name="plantType">
+                {{#each plantTypes}}
+                <option value="{{this.plantTypeID}}">{{this.plantTypeName}}</option>
+                {{/each}}
+            </select></nobr>
+            
+            <nobr><label for="plantMaturity">Maturity:</label>
+            <input type="text" id="plantMaturity"></nobr>
+            
+            <nobr><label for="plantPrice">Price:</label>
+            <input type="number" id="plantPrice"></nobr>
+
+            <nobr><label for="plantCost">Cost:</label>
+            <input type="number" id="plantCost"></nobr>
+
+            <nobr><label for="plantInventory">Inventory:</label>
+            <input type="number" id="plantInventory"></nobr>
+
+        </fieldset>
+            <button type="button" onclick="addOrUpdatePlantInData()">Save Plant</button>
+            <button type="button" onclick="hidePlantForm()">Cancel</button>
+        </form>
+    </div>
+
+    <div id="deleteFormContainer" style="display: none;">
+        <h3>Delete Plant</h3>
+        <form id="deleteForm">
+            <p id="deletePlantConfirmation"></p>
+            <button type="button" onclick="removePlantFromData()">Delete Order</button>
+            <button type="button" onclick="hideDeleteForm()">Cancel</button>
+        </form>
+    </div>
+    <!-- You can keep JavaScript for handling form actions -->
