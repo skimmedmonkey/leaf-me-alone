@@ -14,7 +14,7 @@
 // Express
 var express = require('express');   // We are using the express library for the web server
 var app     = express();            // We need to instantiate an express object to interact with the server in our code
-PORT        = 5757;                 // Set a port number at the top so it's easy to change in the future
+PORT        = 57575;                 // Set a port number at the top so it's easy to change in the future
 app.use(express.static('public'));
 
 // Database
@@ -34,17 +34,176 @@ app.use(express.static('public'))
     ROUTES
 */
 
+// ---------------------- INDEX ---------------------
+
 app.get('/', function(req, res)                 // This is the basic syntax for what is called a 'route'
     {
         // Return index page?
         res.render('index');      // This function literally sends the string "The server is running!" to the computer
     });
 
-app.get('/customers', function(req, res)                 // This is the basic syntax for what is called a 'route'
+// ---------------------- CUSTOMERS ---------------------
+app.get('/customers', function(req, res)                
 {
-    // Return index page?
-    res.render('customers');      // This function literally sends the string "The server is running!" to the computer
+    const query1 = `
+    SELECT customerID, customerName, customerEmail, customerPhone, customerAddress, createDate
+    FROM Customers`;
+
+    db.pool.query(query1, function(error, rows, fields){
+        if (error) {
+            console.error("Error executing query:", error);
+            res.status(500).send("Error retrieving customers.");
+            return;
+        } 
+        res.render('customers',  {data: rows});
+    })
 });   
+
+app.post('/customers/add', function(req, res)                 
+    {
+        console.log('received add request')
+        const data = req.body;
+        const query1 = `
+            INSERT INTO Customers 
+            (customerName, customerEmail, customerPhone, customerAddress, createDate)
+            VALUES
+            ('${data.customerName}', '${data.customerEmail}', ${data.customerPhone}, '${data.customerAddress}', CURDATE())
+            `
+
+        db.pool.query(query1, function(error, rows, fields) {
+            if (error) {
+                console.log(error);
+                res.sendStatus(400);  // Error handling
+            } else {
+                res.render('customers');  // Redirect to the customers list page
+            }
+        });
+            
+    });    
+
+app.put('/customers/edit', function(req, res)
+{
+    console.log('received add request')
+    const data = req.body;
+
+    const query1 = `
+        UPDATE Customers
+        SET customerName = '${data.customerName}', 
+            customerEmail = '${data.customerEmail}', 
+            customerPhone = ${data.customerPhone}, 
+            customerAddress = '${data.customerAddress}'
+        WHERE
+            customerID = ${data.customerID} `;
+
+    db.pool.query(query1, function(error, rows, fields) {
+        if (error) {
+            console.log(error);
+            res.sendStatus(400);  // Error handling
+        } else {
+            res.render('customers');  // Redirect to the plants list page
+        }
+    });
+});
+
+app.delete('/customers/:_id', function(req, res)                 
+    {
+        console.log('received delete request')
+        let query1 = `
+        DELETE FROM Customers WHERE customerID = ${req.params._id}
+    `;
+    
+    db.pool.query(query1, function(error, rows){
+        if (error) {
+            console.error("Error executing query:", error);
+            res.status(500).send("Error deleting Customer.");
+        } else {
+            res.status(204).send("Customer successfully deleted")
+        }
+    });
+    
+    });   
+
+// ---------------------- SUPPLIERS ---------------------
+
+app.get('/suppliers', function(req, res)                
+{
+    const query1 = `
+        SELECT supplierID, supplierName, supplierPhone, supplierEmail, amountDue
+        FROM Suppliers`;
+
+    db.pool.query(query1, function(error, rows, fields){
+        if (error) {
+            console.error("Error executing query:", error);
+            res.status(500).send("Error retrieving suppliers.");
+            return;
+        } 
+        res.render('suppliers',  {data: rows});
+    })
+});   
+
+app.post('/suppliers/add', function(req, res)                 
+    {
+        console.log('received supplier add request')
+        const data = req.body;
+        const query1 = `
+            INSERT INTO Suppliers
+                (supplierName, supplierPhone, supplierEmail, amountDue)
+            VALUES
+            ('${data.supplierName}', ${data.supplierPhone}, '${data.supplierEmail}', ${data.amountDue})
+            `
+
+        db.pool.query(query1, function(error, rows, fields) {
+            if (error) {
+                console.log(error);
+                res.sendStatus(400);  // Error handling
+            } else {
+                res.render('suppliers');  // Redirect to the customers list page
+            }
+        });
+            
+    });    
+
+app.put('/suppliers/edit', function(req, res)
+{
+    console.log('received supplier edit request')
+    const data = req.body;
+
+    const query1 = `
+        UPDATE Suppliers
+        SET supplierName = '${data.supplierName}', 
+            supplierEmail = '${data.supplierEmail}', 
+            supplierPhone = ${data.supplierPhone}, 
+            amountDue = ${data.amountDue}
+        WHERE
+            supplierID = ${data.supplierID} `;
+
+    db.pool.query(query1, function(error, rows, fields) {
+        if (error) {
+            console.log(error);
+            res.sendStatus(400);  // Error handling
+        } else {
+            res.render('suppliers');  // Redirect to the supplier list page
+        }
+    });
+});
+
+app.delete('/suppliers/:_id', function(req, res)                 
+    {
+        console.log('received delete request')
+        let query1 = `
+        DELETE FROM Suppliers WHERE supplierID = ${req.params._id}
+    `;
+    
+    db.pool.query(query1, function(error, rows){
+        if (error) {
+            console.error("Error executing query:", error);
+            res.status(500).send("Error deleting Customer.");
+        } else {
+            res.status(204).send("Supplier successfully deleted")
+        }
+    });
+});   
+
 
 app.get('/orders', function(req, res)                 // This is the basic syntax for what is called a 'route'
 {
@@ -58,11 +217,7 @@ app.get('/plantssuppliers', function(req, res)                 // This is the ba
     res.render('plantssuppliers');      // This function literally sends the string "The server is running!" to the computer
 });
 
-app.get('/suppliers', function(req, res)                 // This is the basic syntax for what is called a 'route'
-{
-    // Return index page?
-    res.render('suppliers');      // This function literally sends the string "The server is running!" to the computer
-});
+// ---------------------- PLANTS ---------------------
     
 app.get('/plants', function(req, res) {
 

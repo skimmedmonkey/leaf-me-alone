@@ -2,16 +2,18 @@
     <script src="plants.js"> </script>
     <button onclick="addPlant()">Add</button>
     <table>
-        <thead>
-        <tr>
-            {{#each data.[0]}}
-    
-        <th>{{@key}}</th>
-
-        <!-- Loop over the 'plants' data passed from the server -->
-        {{/each}}
-        </tr>
-        </thead>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Maturity</th>
+        <th>Price</th>
+        <th>Cost</th>
+        <th>Inventory</th>
+        <th></th>
+    </tr>
+    </thead>
         <tbody>
             {{#each data}}
             <tr>

@@ -114,6 +114,8 @@ async function addOrUpdatePlantInData() {
         if (!response.ok) {
             throw new Error(`Edit failed: ${response.status}`);
         }
+
+        alert('Plant successfully edited')
     }
     else if (mode === 'add'){
 
@@ -129,6 +131,7 @@ async function addOrUpdatePlantInData() {
         if (!response.ok) {
             throw new Error(`Add failed: ${response.status}`);
         }
+        alert('Plant successfully added')
     }
 
     hidePlantForm();
@@ -146,7 +149,7 @@ async function removePlantFromData() {
     if (!response.ok) {
         throw new Error(`Delete failed: ${response.status}`);
     }
-    
+    alert('Plant successfully deleted')
     hideDeleteForm();
     location.reload();
 
