@@ -54,8 +54,106 @@ app.get('/orders', function(req, res)                 // This is the basic synta
 
 app.get('/plantssuppliers', function(req, res)                 // This is the basic syntax for what is called a 'route'
 {
-    // Return index page?
-    res.render('plantssuppliers');      // This function literally sends the string "The server is running!" to the computer
+    console.log('received select request for PlantsSuppliers');
+
+    let query1 = `
+    SELECT
+        ps.plantID,
+        ps.supplierID,
+        p.plantName,
+        s.supplierName
+    FROM
+        PlantsSuppliers ps
+    JOIN
+        Plants p ON ps.plantID = p.plantID
+    JOIN
+        Suppliers s ON ps.supplierID = s.supplierID
+    `;
+    let query2 = "SELECT plantID, plantName FROM Plants";
+    let query3 = "SELECT supplierID, supplierName FROM Suppliers";
+
+    db.pool.query(query1, function (error, rows, fields) {
+        if (error) {
+            console.error("Error executing query:", error);
+            res.status(500).send("Error getting plant supplier");
+            return;
+        }
+        db.pool.query(query2, function (error, plantRows, fields) {
+            if (error) {
+                console.error("Error executing query:", error);
+                res.status(500).send("Error getting plants");
+                return;
+            }
+            db.pool.query(query3, function (error, supplierRows, fields) {
+                if (error) {
+                    console.error("Error executing query:", error);
+                    res.status(500).send("Error getting suppliers");
+                    return;
+                }
+                res.render('plantssuppliers')
+            });
+        });
+    });
+});
+
+app.put('/plantssuppliers/edit', function (req, res) {
+    console.log('received edit request for PlantsSuppliers');
+    const data = req.body;
+
+    const query1 = `
+        UPDATE PlantsSuppliers
+        SET
+            plantID = '${data.plantID}',
+            supplierID = '${data.supplierID}'
+        WHERE
+            plantID = ${data.originalPlantID} AND supplierID = ${data.originalSupplierID}`;
+    
+    db.pool.query(query1, function (error, rows, fields) {
+        if (error) {
+            console.error("Error executing query:", error);
+            res.status(400).send("Error updating PlantsSuppliers");
+        } else {
+            res.redirect('/plantssuppliers');
+        }
+    });
+});
+
+app.post('/plantssuppliers/add', function (req, res) {
+    console.log('received add request for PlantsSuppliers');
+    const data = req.body;
+
+    const query1 = `
+        INSERT INTO PlantsSuppliers (plantID, supplierID) 
+        VALUES ('${data.plantID}', '${data.supplierID}')
+    `;
+
+    db.pool.query(query1, function (error, rows, fields) {
+        if (error) {
+            console.error("Error executing query:", error);
+            res.status(400).send("Error adding PlantsSuppliers.");
+        } else {
+            res.redirect('/plantssuppliers');
+        }
+    });
+});
+
+app.delete('/plantssuppliers/:plantID/:supplierID', function (req, res) {
+    console.log('received delete request for PlantsSuppliers');
+    const { plantID, supplierID } = req.params;
+
+    const query1 = `
+        DELETE FROM PlantsSuppliers 
+        WHERE plantID = ${plantID} AND supplierID = ${supplierID}
+    `;
+
+    db.pool.query(query1, function (error, rows) {
+        if (error) {
+            console.error("Error executing query:", error);
+            res.status(500).send("Error deleting PlantsSuppliers");
+        } else {
+            res.status(204).send("PlantsSuppliers successfully deleted.");
+        }
+    });
 });
 
 app.get('/suppliers', function(req, res)                 // This is the basic syntax for what is called a 'route'

@@ -1,150 +1,57 @@
-
-<script language="JavaScript">
-    function showPlantForm(type, button = null){
-        const container = document.getElementById('form-space');
-        container.innerHTML = '' //Clear this section
-
-        const form = document.createElement('form');
-        const legend = document.createElement('legend');
-        legend.innerHTML = `<strong>${type} Plants Supplier</strong>`;
-        form.appendChild(legend);
-
-        const fieldset = document.createElement('fieldset');
-
-        const createInputField = (labelText, inputType, inputName, value = '') => {
-            const label = document.createElement('label');
-            label.textContent = labelText;
-            const input = document.createElement('input');
-            input.type = inputType;
-            input.name = inputName;
-            input.value = value;
-            fieldset.appendChild(label);
-            fieldset.appendChild(input);
-        };
-
-        if (type === 'Edit' && button) {
-            const row = button.parentElement.parentElement;
-            const cells = row.getElementsByTagName('td');
-            const plantId = cells[0].textContent;
-            const supplierId = cells[1].textContent;
-
-            // Pre-fill the fields with the values from the table row
-            createInputField('Plant ID', 'number', 'plantid', plantId);
-            createInputField('Supplier ID', 'number', 'supplierid', supplierId);
-        } else {
-            createInputField('Plant ID', 'number', 'plantid');
-            createInputField('Supplier ID', 'number', 'supplierid');
-        }
-        form.appendChild(fieldset);
-
-        const btns =  document.createElement('div');
-
-        const submitBtn = document.createElement('input');
-        submitBtn.className = 'btn';
-        submitBtn.type = 'submit';
-        submitBtn.value = `${type} Plants Supplier`;
-        btns.appendChild(submitBtn)
-
-        const cancelBtn = document.createElement('input')
-        cancelBtn.className = 'btn';
-        cancelBtn.type = 'submit';
-        cancelBtn.value = 'Cancel'
-        cancelBtn.onclick = () => (container.innerHTML = '')
-        btns.appendChild(cancelBtn)
-
-        form.appendChild(btns);
-        container.appendChild(form)
-    }
-
-    function showDeleteForm(button) {
-        const container = document.getElementById('form-space');
-        container.innerHTML = '' //Clear this section
-
-        const form = document.createElement('form');
-        const legend = document.createElement('legend');
-        legend.innerHTML = `<strong>Delete Plants Supplier</strong>`;
-        form.appendChild(legend)
-        
-        confirmation = document.createElement('p')
-        confirmation.innerHTML = "Are you sure you want to delete the following plant supplier?"
-        form.appendChild(confirmation)
-
-        const row = button.parentElement.parentElement;
-        const cells = row.getElementsByTagName('td');
-        const id = cells[0].textContent;
-        const name = cells[1].textContent;
-
-        deletingPlant = document.createElement('p')
-        deletingPlant.innerHTML = `ID: ${id}, Name: ${name}`
-        form.appendChild(deletingPlant)
-
-        const btns =  document.createElement('div');
-        
-        input = document.createElement('input');
-        input.type ="submit"
-        input.className = "btn"
-        input.value = "Delete Plants Supplier"
-        btns.appendChild(input)
-
-        const cancelBtn = document.createElement('input')
-        cancelBtn.className = 'btn';
-        cancelBtn.type = 'submit';
-        cancelBtn.value = 'Cancel'
-        cancelBtn.onclick = () => (container.innerHTML = '')
-        btns.appendChild(cancelBtn)
-
-        form.appendChild(btns);
-        container.appendChild(form)
-    }
-</script>
     <h2>Plants Suppliers</h2>
-    <button onclick="showPlantForm('Add')">Add</button>
+    <script src="plantssuppliers.js"></script>
+    <button onclick="addPlant()">Add</button>
     <table>
+        <thead>
         <tr>
-            <th>Plant ID</th>
-            <th>Supplier ID</th>
-            <th></th>
+            <th>Plant Name</th>
+            <th>Supplier Name</th>
+            <th>Actions</th>
         </tr>
-        <tr>
-            <td>1</td>
-            <td>1</td>
+        </thead>
+        <tbody>
+            {{#each data}}
+            <tr>
+            <td data-id="{{this.plantID}}">{{this.plantName}}</td>
+            <td data-id="{{this.supplierID}}">{{this.supplierName}}</td>
             <td>
-                <button onclick="showPlantForm('Edit', this)">Edit</button>
-                <button onclick="showDeleteForm(this)">Delete</button>
+                <button onclick="editPlantSupplier(this)">Edit</button>
+                <button onclick="deletePlantSupplier({{this.plantID}},{{this.supplierID}})">Delete</button>
             </td>
         </tr>
-        <tr>
-            <td>1</td>
-            <td>2</td>
-            <td>
-                <button onclick="showPlantForm('Edit', this)">Edit</button>
-                <button onclick="showDeleteForm(this)">Delete</button>
-            </td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td>3</td>
-            <td>
-                <button onclick="showPlantForm('Edit', this)">Edit</button>
-                <button onclick="showDeleteForm(this)">Delete</button>
-            </td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td>4</td>
-            <td>
-                <button onclick="showPlantForm('Edit', this)">Edit</button>
-                <button onclick="showDeleteForm(this)">Delete</button>
-            </td>
-        </tr>
-        <tr>
-            <td>3</td>
-            <td>5</td>
-            <td>
-                <button onclick="showPlantForm('Edit', this)">Edit</button>
-                <button onclick="showDeleteForm(this)">Delete</button>
-            </td>
-        </tr>
+        {{/each}}
+        </tbody>
     </table>
-    <p></p>
     <div id="form-space" style="display: block"></div>
+    <div id="plantSuppliersFormContainer" style="display: none;">
+        <h3 id="formHeader"></h3>
+        <form id="plantsSuppliersForm" data-mode="">
+            <fieldset>
+            <nobr><label for="plantID">Plant</label>
+            <select id="plantID">
+                {{#each plantNames}}
+                <option value="{{this.plantID}}">{{this.plantName}}</option>
+                {{/each}}
+            </select>
+            </nobr>
+            <nobr><label for="supplierID">Supplier</label>
+            <select id="supplierID">
+                {{#each supplierNames}}
+                <option value="{{this.supplierID}}">{{this.supplierName}}</option>
+                {{/each}}
+            </select>
+            </nobr>
+        </fieldset>
+            <button type="button" onclick="addOrUpdatePlantSupplierInData()">Save Plant</button>
+            <button type="button" onclick="hideForm()">Cancel</button>
+        </form>
+    </div>
+
+    <div id="deleteFormContainer" style="display: none;">
+        <h3>Delete Plant</h3>
+        <form id="deleteForm">
+            <p id="deletePlantSupplierConfirmation"></p>
+            <button type="button" onclick="removePlantSupplierFromData()">Delete Order</button>
+            <button type="button" onclick="hideDeleteForm()">Cancel</button>
+        </form>
+    </div>
