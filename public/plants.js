@@ -40,9 +40,17 @@ function editPlant(editButton) {
     document.getElementById("plantInventory").value = plantRow.plantInventory;
 
     // Plant type select menu must be handled differently
-    const selectElement = document.getElementById("plantType")
-    Array.from(selectElement.children).forEach(option => {
+    const selectTypeElement = document.getElementById("plantType")
+    Array.from(selectTypeElement.children).forEach(option => {
         if (option.innerHTML === plantRow.plantTypeName){
+            option.selected="selected"
+        }
+    })
+
+    // Plant type select menu must be handled differently
+    const selectMaturityElement = document.getElementById("plantMaturity")
+    Array.from(selectMaturityElement.children).forEach(option => {
+        if (option.innerHTML === plantRow.plantMaturity){
             option.selected="selected"
         }
     })

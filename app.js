@@ -30,6 +30,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(express.static('public'))
 
+
 /*
     ROUTES
 */
@@ -238,6 +239,7 @@ app.get('/plants', function(req, res) {
             PlantTypes pt ON p.plantTypeID = pt.plantTypeID
     `;
     let query2 = "SELECT plantTypeID, plantTypeName FROM PlantTypes";
+    let query3 = "SELECT DISTINCT plantMaturity FROM Plants"
 
     db.pool.query(query1, function(error, rows, fields){
         if (error) {
@@ -252,9 +254,9 @@ app.get('/plants', function(req, res) {
                 return;
             }
 
-            res.render('plants', {
-                data: rows,
-                plantTypes: plantTypeRows
+                res.render('plants', {
+                    data: rows,
+                    plantTypes: plantTypeRows
             });
         });
     });
