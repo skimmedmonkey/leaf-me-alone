@@ -97,6 +97,10 @@ WHERE id = :supplierIDInput
 DELETE FROM dbo.Plants
 WHERE id = :plantIDInput
 
+--PlantsSuppliers data
+DELETE FROM dbo.PlantsSuppliers
+WHERE plantID = :plantIDInput AND supplierID = :supplierIDInput;
+
 --OrderItems data
 DELETE FROM dbo.OrderItems
 Where orderID = :orderIDInput;

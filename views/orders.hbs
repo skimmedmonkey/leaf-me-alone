@@ -1,5 +1,6 @@
     <h2>Customer Orders</h2>
-    <button onclick="showOrderForm()">Add</button>
+    <script src="orders.js"></script>
+    <button onclick="showAddOrderForm()">Add</button>
     <table id="ordersTable">
         <thead>
             <tr>
@@ -8,47 +9,57 @@
                 <th>Order Price</th>
                 <th>Item Quantity</th>
                 <th>Is Delivery</th>
-                <th>Customer ID</th>
+                <th>Customer</th>
                 <th>Plants in Order</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            <!-- Orders will be dynamically added here -->
+            {{#each data}}
+            <tr>
+            <td data-id="{{this.orderID}}">{{this.orderID}}</td>
+            <td>{{this.orderDate}}</td>
+            <td>{{this.orderPrice}}</td>
+            <td>{{this.itemQuantity}}</td>
+            <td>{{#if this.isDelivery}}Yes{{else}}No{{/if}}</td>
+            <td>{{this.customerName}}</td>
+            <td>{{this.plants}}</td>
+            <td>
+                <button onclick="editOrder(this)">Edit</button>
+                <button onclick="deleteOrder({{this.orderID}})">Delete</button>
+            </td>
+        </tr>
+        {{/each}}
         </tbody>
     </table>
 
-    <div id="orderFormContainer" style="display: none;">
+    <div id="addOrderFormContainer" style="display: none;">
         <h3>Add / Edit Order</h3>
-        <form id="orderForm">
-            <fieldset>
-            <nobr><label for="orderID">Order ID:</label>
-            <input type="number" id="orderID" readonly></nobr>
+<form id="addOrderForm">
+    <label for="orderDate">Order Date:</label>
+    <input type="datetime-local" id="orderDate" name="orderDate" required>
 
-            <nobr><label for="orderDate">Order Date:</label>
-            <input type="datetime-local" id="orderDate"></nobr>
+    <label for="customerID">Customer:</label>
+    <select id="customerID" name="customerID">
+        {{#each customers}}
+        <option value="{{this.customerID}}">{{this.customerName}}</option>
+        {{/each}}
+    </select>
 
-            <nobr><label for="orderPrice">Order Price:</label>
-            <input type="number" id="orderPrice" step="0.01"></nobr>
-
-            <nobr><label for="itemQuantity">Item Quantity:</label>
-            <input type="number" id="itemQuantity"></nobr>
-
-            <p>Plants in Order:</p>
-            <ul id="plantsInOrderList">
-            <!-- Added plants will be displayed here -->
-            </ul>
-
-            <nobr><label for="isDelivery">Is Delivery:</label>
-            <input type="checkbox" id="isDelivery"></nobr>
-
-            <nobr><label for="customerID">Customer ID:</label>
-            <input type="number" id="customerID"></nobr>
-        </fieldset>
-            <button type="button" onclick="addOrUpdateOrder()">Save Order</button>
-            <button type="button" onclick="hideOrderForm()">Cancel</button>
-        </form>
+    {{#each plants}}
+    <div class="plant-row">
+        <label for="plant-{{this.plantID}}">{{this.plantName}} {{this.plantPrice}}</label>
+        <input type="number" id="plant-{{this.plantID}}" name="plant-{{this.plantID}}" placeholder="Quantity" min="0">
+        <input type="hidden" id="price-{{this.plantID}}" value="{{this.plantPrice}}">
     </div>
+    {{/each}}
+
+    <label for="isDelivery">Delivery:</label>
+    <input type="checkbox" id="isDelivery">
+    <button type="button" onclick="addOrder()">Submit Order</button>
+    <button type="button" onclick="hideAddOrderForm()">Cancel</button>
+    </form>
+</div>
 
     <div id="deleteFormContainer" style="display: none;">
         <h3>Delete Order</h3>
@@ -59,7 +70,7 @@
         </form>
     </div>
 
-    <script>
+<!--    <script>
         const orders = [
             { orderID: 1, orderDate: "2024-10-01T14:00", orderPrice: 62.48, itemQuantity: 3, isDelivery: true, customerID: 1 },
             { orderID: 2, orderDate: "2024-10-12T10:30", orderPrice: 30.75, itemQuantity: 1, isDelivery: false, customerID: 2 },
@@ -198,4 +209,4 @@
         window.onload = function() {
             displayOrders();
         };
-    </script>
+    </script>-->
