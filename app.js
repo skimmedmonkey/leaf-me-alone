@@ -48,8 +48,161 @@ app.get('/customers', function(req, res)                 // This is the basic sy
 
 app.get('/orders', function(req, res)                 // This is the basic syntax for what is called a 'route'
 {
-    // Return index page?
-    res.render('orders');      // This function literally sends the string "The server is running!" to the computer
+    const ordersQuery = `
+        SELECT 
+            o.orderID,
+            o.orderDate,
+            o.orderPrice,
+            o.itemQuantity,
+            o.isDelivery,
+            o.customerID,
+            c.customerName,
+            GROUP_CONCAT(p.plantName SEPARATOR ', ') AS plants
+        FROM 
+            Orders o
+        JOIN 
+            Customers c ON o.customerID = c.customerID
+        JOIN 
+            OrderItems oi ON o.orderID = oi.orderID
+        JOIN 
+            Plants p ON oi.plantID = p.plantID
+        GROUP BY 
+            o.orderID;
+    `;
+
+    const customersQuery = `SELECT customerID, customerName FROM Customers`;
+    const plantsQuery = `SELECT plantID, plantName, plantPrice FROM Plants`;    
+
+    db.pool.query(ordersQuery, function (error, orders) {
+        if (error) {
+            console.error("Error retrieving orders:", error);
+            res.status(500).send("Error retrieving orders.");
+            return;
+        }
+
+        db.pool.query(customersQuery, function (error, customers) {
+            if (error) {
+                console.error("Error retrieving customers:", error);
+                res.status(500).send("Error retrieving customers.");
+                return;
+            }
+
+            db.pool.query(plantsQuery, function (error, plants) {
+                if (error) {
+                    console.error("Error retrieving plants:", error);
+                    res.status(500).send("Error retrieving plants.");
+                    return;
+                }
+
+                res.render('orders', { data: orders, customers, plants});
+            });
+        });
+    });
+});
+
+app.post('/orders/add', (req, res) => {
+    const { orderDate, orderPrice, itemQuantity, isDelivery, customerID, plants } = req.body;
+  
+    if (!orderDate || !orderPrice || !itemQuantity || isDelivery === undefined || !customerID || !plants || plants.length === 0) {
+      return res.status(400).send("Invalid order data.");
+    }
+  
+    db.pool.getConnection((err, connection) => {
+      if (err) {
+        console.error("Failed to get connection:", err);
+        return res.status(500).send("Failed to connect to the database.");
+      }
+  
+      connection.beginTransaction((err) => {
+        if (err) {
+          connection.release();
+          console.error("Failed to start transaction:", err);
+          return res.status(500).send("Failed to start transaction.");
+        }
+  
+        // Insert into Orders table
+        const orderQuery = `
+          INSERT INTO Orders (orderDate, orderPrice, itemQuantity, isDelivery, customerID)
+          VALUES (?, ?, ?, ?, ?)
+        `;
+        connection.query(orderQuery, [orderDate, orderPrice, itemQuantity, isDelivery, customerID], (err, result) => {
+          if (err) {
+            return rollbackTransaction(connection, res, "Failed to insert order.");
+          }
+  
+          const orderID = result.insertId;
+  
+          // Insert into OrderItems table
+          const orderItems = plants.map(({ plantID, quantity }) => [orderID, plantID, quantity]);
+          const orderItemsQuery = `
+            INSERT INTO OrderItems (orderID, plantID, quantity)
+            VALUES ?
+          `;
+          connection.query(orderItemsQuery, [orderItems], (err) => {
+            if (err) {
+              return rollbackTransaction(connection, res, "Failed to insert order items.");
+            }
+  
+            // Commit the transaction
+            connection.commit((err) => {
+              connection.release();
+  
+              if (err) {
+                console.error("Failed to commit transaction:", err);
+                return res.status(500).send("Failed to commit transaction.");
+              }
+  
+              res.status(201).send("Order added successfully.");
+            });
+          });
+        });
+      });
+    });
+  });
+  
+  // Helper function for rolling back a transaction
+  function rollbackTransaction(connection, res, errorMessage) {
+    connection.rollback(() => {
+      connection.release();
+      console.error(errorMessage);
+      res.status(500).send(errorMessage);
+    });
+  }
+
+
+app.put('/orders/edit', function (req, res) {
+    const data = req.body;
+    const query = `
+        UPDATE Orders
+        SET 
+            orderDate = '${data.orderDate}', 
+            orderPrice = '${data.orderPrice}', 
+            itemQuantity = '${data.itemQuantity}', 
+            isDelivery = '${data.isDelivery}', 
+            customerID = '${data.customerID}'
+        WHERE 
+            orderID = ${data.orderID};
+    `;
+    db.pool.query(query, function (error) {
+        if (error) {
+            console.error("Error editing order:", error);
+            res.status(500).send("Error editing order.");
+            return;
+        }
+        res.status(200).send("Order updated.");
+    });
+});
+
+app.delete('/orders/:id', function (req, res) {
+    const query = `DELETE FROM Orders WHERE orderID = ${req.params.id};`;
+    db.pool.query(query, function (error) {
+        if (error) {
+            console.error("Error deleting order:", error);
+            res.status(500).send("Error deleting order.");
+            return;
+        }
+        res.status(204).send();
+    });
 });
 
 app.get('/plantssuppliers', function(req, res)                 // This is the basic syntax for what is called a 'route'
@@ -69,8 +222,8 @@ app.get('/plantssuppliers', function(req, res)                 // This is the ba
     JOIN
         Suppliers s ON ps.supplierID = s.supplierID
     `;
-    let query2 = "SELECT plantID, plantName FROM Plants";
-    let query3 = "SELECT supplierID, supplierName FROM Suppliers";
+    let query2 = `SELECT plantID, plantName FROM Plants`;
+    let query3 = `SELECT supplierID, supplierName FROM Suppliers`;
 
     db.pool.query(query1, function (error, rows, fields) {
         if (error) {
@@ -90,7 +243,7 @@ app.get('/plantssuppliers', function(req, res)                 // This is the ba
                     res.status(500).send("Error getting suppliers");
                     return;
                 }
-                res.render('plantssuppliers')
+                res.render('plantssuppliers', {data:rows, plants: plantRows, suppliers: supplierRows,});
             });
         });
     });

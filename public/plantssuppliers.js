@@ -2,7 +2,7 @@
 let plantIDForDelete = null;
 let supplierIDForDelete = null;
 
-function addPlantSupplier(){
+function addPlantsSupplier(){
 
     const form = document.getElementById("plantsSuppliersForm")  
     form.dataset.mode = 'add';
@@ -12,25 +12,28 @@ function addPlantSupplier(){
 
 }
 
-function editPlantSupplier(editButton) {
-    
+function editPlantsSupplier(editButton) {
     const form = document.getElementById("plantsSuppliersForm")  
     form.dataset.mode = 'edit';
     form.reset();
-
     const row = editButton.closest('tr');
-    console.log(row)
+    const currentPlantID = row.children[0].getAttribute('data-id');
+    const currentSupplierID = row.children[1].getAttribute('data-id');
 
-    const plantSupplierRow = {
-        plantID: row.children[0].textContent.trim(),
-        supplierID: row.children[1].textContent.trim(),
-    };
+    selectedPlantID = currentPlantID;
+    selectedSupplierID = currentSupplierID;
 
+
+
+    //const plantID = row.children[0].getAttribute("data-id");
+    //const supplierID = row.children[1].getAttribute("data-id");
+    
     // Update form fields
-    document.getElementById("plantID").value = plantSupplierRow.plantID;
-    document.getElementById("supplierID").value = plantSupplierRow.supplierID;
+    document.getElementById("plantID").value = currentPlantID;
+    document.getElementById("supplierID").value = currentSupplierID;
 
-
+    form.dataset.originalPlantID = currentPlantID;
+    form.dataset.originalPlantID = currentSupplierID;
     // Plant type select menu must be handled differently
     //const selectElement = document.getElementById("plantType")
     //Array.from(selectElement.children).forEach(option => {
@@ -69,6 +72,7 @@ function deletePlantSupplier(plantID, supplierID) {
 
 }
 
+
 async function addOrUpdatePlantSupplierInData() {
     const form = document.getElementById("plantsSuppliersForm")   
     const mode = form.dataset.mode
@@ -76,9 +80,14 @@ async function addOrUpdatePlantSupplierInData() {
     const plantID = document.getElementById("plantID").value 
     const supplierID = document.getElementById("supplierID").value 
 
+    const originalPlantID = form.dataset.originalPlantID;
+    const originalSupplierID = form.dataset.originalSupplierID;
+
     const plantsSupplierRecord = {
         plantID,
         supplierID,
+        originalPlantID,
+        originalSupplierID,
     }
 
     if (mode === 'edit'){

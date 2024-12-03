@@ -1,6 +1,6 @@
     <h2>Plants Suppliers</h2>
     <script src="plantssuppliers.js"></script>
-    <button onclick="addPlant()">Add</button>
+    <button onclick="addPlantsSupplier()">Add</button>
     <table>
         <thead>
         <tr>
@@ -15,7 +15,7 @@
             <td data-id="{{this.plantID}}">{{this.plantName}}</td>
             <td data-id="{{this.supplierID}}">{{this.supplierName}}</td>
             <td>
-                <button onclick="editPlantSupplier(this)">Edit</button>
+                <button onclick="editPlantsSupplier(this)">Edit</button>
                 <button onclick="deletePlantSupplier({{this.plantID}},{{this.supplierID}})">Delete</button>
             </td>
         </tr>
@@ -23,20 +23,20 @@
         </tbody>
     </table>
     <div id="form-space" style="display: block"></div>
-    <div id="plantSuppliersFormContainer" style="display: none;">
+    <div id="plantsSuppliersFormContainer" style="display: none;">
         <h3 id="formHeader"></h3>
         <form id="plantsSuppliersForm" data-mode="">
             <fieldset>
             <nobr><label for="plantID">Plant</label>
             <select id="plantID">
-                {{#each plantNames}}
+                {{#each plants}}
                 <option value="{{this.plantID}}">{{this.plantName}}</option>
                 {{/each}}
             </select>
             </nobr>
             <nobr><label for="supplierID">Supplier</label>
             <select id="supplierID">
-                {{#each supplierNames}}
+                {{#each suppliers}}
                 <option value="{{this.supplierID}}">{{this.supplierName}}</option>
                 {{/each}}
             </select>

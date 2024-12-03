@@ -100,7 +100,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `Orders`;
 CREATE TABLE `Orders` (
-  `orderID` INT NOT NULL,
+  `orderID` INT NOT NULL AUTO_INCREMENT,
   `orderDate` DATETIME NOT NULL,
   `orderPrice` DECIMAL(8,2) NOT NULL,
   `itemQuantity` INT NOT NULL,
@@ -120,7 +120,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `OrderItems`;
 CREATE TABLE `OrderItems` (
-  `orderItemID` INT NOT NULL,
+  `orderItemID` INT NOT NULL AUTO_INCREMENT,
   `quantity` INT NOT NULL,
   `orderID` INT NOT NULL,
   `plantID` INT NOT NULL,
@@ -136,6 +136,7 @@ CREATE TABLE `OrderItems` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
+
 
 -- Insert 'PlantTypes' example data
 INSERT INTO PlantTypes (plantTypeID, plantTypeName) VALUES
@@ -153,6 +154,7 @@ INSERT INTO Plants (plantID, plantName, plantTypeID, plantMaturity, plantPrice, 
 (3, 'Tulip', 103, 'Mature', 30.75, 18.00, 80),
 (4, 'Oak Tree', 101, 'Seedling', 12.25, 7.50, 150),
 (5, 'Saguaro', 104, 'Mature', 45.00, 27.00, 20);
+
 
 -- Insert 'Suppliers' example data
 INSERT INTO Suppliers (supplierID, supplierName, supplierPhone, supplierEmail, amountDue) VALUES
@@ -183,6 +185,14 @@ INSERT INTO Customers (customerID, customerName, customerEmail, customerPhone, c
 (4, 'Paul Brown', 'paul.b@email.com', 6677889900, '321 Birchwood Ln, City, PA 15232', '2024-04-05 09:20'),
 (5, 'Linda Green', 'linda.g@email.com', 5544332211, '654 Cedarcliff St, Town, PA 15213', '2024-05-25 16:15');
  
+-- Insert 'Orders' example data
+INSERT INTO Orders (orderID, orderDate, orderPrice, itemQuantity, isDelivery, customerID) VALUES
+(1, '2024-10-01 14:00', 82.73, 3, TRUE, 1),
+(2, '2024-10-12 10:30', 12.25, 1, FALSE, 2),
+(3, '2024-10-07 09:15', 121.50, 4, TRUE, 3),
+(4, '2024-10-20 13:45', 30.75, 1, FALSE, 4),
+(5, '2024-10-15 11:00', 110.75, 5, TRUE, 5);
+ 
  -- Insert 'OrderItems' example data
  INSERT INTO OrderItems (orderItemID, quantity, orderID, plantID) VALUES
 (1, 2, 1, 1),
@@ -196,13 +206,6 @@ INSERT INTO Customers (customerID, customerName, customerEmail, customerPhone, c
 (9, 1, 5, 3),
 (10, 1, 5, 5);
 
--- Insert 'Orders' example data
-INSERT INTO Orders (orderID, orderDate, orderPrice, itemQuantity, isDelivery, customerID) VALUES
-(1, '2024-10-01 14:00', 82.73, 3, TRUE, 1),
-(2, '2024-10-12 10:30', 12.25, 1, FALSE, 2),
-(3, '2024-10-07 09:15', 121.50, 4, TRUE, 3),
-(4, '2024-10-20 13:45', 30.75, 1, FALSE, 4),
-(5, '2024-10-15 11:00', 110.75, 5, TRUE, 5);
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
