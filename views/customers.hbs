@@ -1,173 +1,77 @@
 <!-- customers.hbs -->
-<script language="JavaScript">
-    function showCustomerForm(button, action) {
-        const container = document.getElementById('form-space');
-        container.innerHTML = ''; // Clear this section
-        
-        const form = document.createElement('form');
-        const legend = document.createElement('legend');
-        legend.innerHTML = `<strong>${action} Customer</strong>`;
-        form.appendChild(legend);
 
-        const fieldset = document.createElement('fieldset');
-
-        const createInputField = (labelText, inputType, inputName, tableFieldIndex) => {
-            const label = document.createElement('label');
-            label.textContent = labelText;
-            const input = document.createElement('input');
-            input.type = inputType;
-            input.name = inputName;
-            if (action === 'Edit'){ // Set the default value of the field to current value in table
-                const row = button.parentElement.parentElement;
-                const cells = row.getElementsByTagName('td');
-                input.value = cells[tableFieldIndex].textContent;
-            }
-            fieldset.appendChild(label);
-            fieldset.appendChild(input);
-        };
-
-        createInputField('Name', 'text', 'name', 1);
-        createInputField('Email', 'email', 'email', 2);
-        createInputField('Phone', 'tel', 'phone', 3);
-        createInputField('Address', 'text', 'address', 4);
-        createInputField('Create Date', 'datetime-local', 'createDate', 5);
-
-        form.appendChild(fieldset);
-
-        const btns = document.createElement('div');
-
-        const submitBtn = document.createElement('input');
-        submitBtn.className = 'btn';
-        submitBtn.type = 'submit';
-        submitBtn.value = `${action} Customer`;
-        btns.appendChild(submitBtn);
-
-        const cancelBtn = document.createElement('input');
-        cancelBtn.className = 'btn';
-        cancelBtn.type = 'button';
-        cancelBtn.value = 'Cancel';
-        cancelBtn.onclick = () => (container.innerHTML = '');
-        btns.appendChild(cancelBtn);
-
-        form.appendChild(btns);
-        container.appendChild(form);
-    }
-
-
-    function showDeleteForm(button) {
-        const container = document.getElementById('form-space');
-        container.innerHTML = ''; // Clear this section
-
-        const form = document.createElement('form');
-        const legend = document.createElement('legend');
-        legend.innerHTML = `<strong>Delete Customer</strong>`;
-        form.appendChild(legend);
-
-        const confirmation = document.createElement('p');
-        confirmation.innerHTML = "Are you sure you want to delete the following customer?";
-        form.appendChild(confirmation);
-
-        const row = button.parentElement.parentElement;
-        const cells = row.getElementsByTagName('td');
-        const id = cells[0].textContent;
-        const name = cells[1].textContent;
-
-        const deletingCustomer = document.createElement('p');
-        deletingCustomer.innerHTML = `ID: ${id}, Name: ${name}`;
-        form.appendChild(deletingCustomer);
-
-        const btns = document.createElement('div');
-
-        const deleteBtn = document.createElement('input');
-        deleteBtn.type = "submit";
-        deleteBtn.className = "btn";
-        deleteBtn.value = "Delete Customer";
-        btns.appendChild(deleteBtn);
-
-        const cancelBtn = document.createElement('input');
-        cancelBtn.className = 'btn';
-        cancelBtn.type = 'button';
-        cancelBtn.value = 'Cancel';
-        cancelBtn.onclick = () => (container.innerHTML = '');
-        btns.appendChild(cancelBtn);
-
-        form.appendChild(btns);
-        container.appendChild(form);
-    }
-</script>
-    <h2>Customer Information</h2>
-    <button onclick="showCustomerForm('Add')">Add</button>
-    <table>
+<h2>Customers</h2>
+<script src="customers.js"> </script>
+<button onclick="addCustomer()">Add</button>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Address</th>
+        <th>Create Date</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+        {{#each data}}
         <tr>
+        <td>{{this.customerID}}</td>
+        <td>{{this.customerName}}</td>
+        <td>{{this.customerEmail}}</td>
+        <td>{{this.customerPhone}}</td>
+        <td>{{this.customerAddress}}</td>
+        <td>{{this.createDate}}</td>
+        <td>
+            <button onclick="editCustomer(this)">Edit</button>
+            <button onclick="deleteCustomer({{this.customerID}})">Delete</button>
+        </td>
+    </tr>
+    {{/each}}
+    </tbody>
+</table>
+<div id="form-space" style="display: block"></div>
+<div id="customerFormContainer" style="display: none;">
+    <h3 id="formHeader"></h3>
+    <form id="customerForm" data-mode="">
+        <fieldset>
+            <nobr>
+                <label for="customerID"></label>
+                <input type="hidden" id="customerID" readonly>
+            </nobr>
             
-            <th>ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Address</th>
-            <th>Create Date</th>
-            <th></th>
-        </tr>
-        <tr>
-            <td>1</td>
-            <td>Jane Doe</td>
-            <td>jane.doe@email.com</td>
-            <td>1234567890</td>
-            <td>123 Penn St, City, PA 15208</td>
-            <td>1/15/24 10:30</td>
-            <td>
-                <button onclick="showCustomerForm(this, 'Edit')">Edit</button>
-                <button onclick="showDeleteForm(this)">Delete</button>
-            </td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td>John Smith</td>
-            <td>john.smith@email.com</td>
-            <td>9876543210</td>
-            <td>456 Oakdale Ave, Town, PA 15217</td>
-            <td>2/20/24 15:45</td>
-            <td>
-                <button onclick="showCustomerForm(this, 'Edit')">Edit</button>
-                <button onclick="showDeleteForm(this)">Delete</button>
-            </td>
-        </tr>
-        <tr>
-            <td>3</td>
-            <td>Mary Johnson</td>
-            <td>mary.j@email.com</td>
-            <td>1122334455</td>
-            <td>789 Pine Rd, Village, PA 15601</td>
-            <td>3/18/24 12:00</td>
-            <td>
-                <button onclick="showCustomerForm(this, 'Edit')">Edit</button>
-                <button onclick="showDeleteForm(this)">Delete</button>
-            </td>
-        </tr>
-        <tr>
-            <td>4</td>
-            <td>Paul Brown</td>
-            <td>paul.b@email.com</td>
-            <td>6677889900</td>
-            <td>321 Birchwood Ln, City, PA 15232</td>
-            <td>4/5/24 9:20</td>
-            <td>
-                <button onclick="showCustomerForm(this, 'Edit')">Edit</button>
-                <button onclick="showDeleteForm(this)">Delete</button>
-            </td>
-        </tr>
-        <tr>
-            <td>5</td>
-            <td>Linda Green</td>
-            <td>linda.g@email.com</td>
-            <td>5544332211</td>
-            <td>654 Cedarcliff St, Town, PA 15213</td>
-            <td>5/25/24 16:15</td>
-            <td>
-                <button onclick="showCustomerForm(this, 'Edit')">Edit</button>
-                <button onclick="showDeleteForm(this)">Delete</button>
-            </td>
-        </tr>
-    </table>
-    <p></p>
-    <div id="form-space" style="display: block"></div>
+            <nobr>
+                <label for="customerName">Name:</label>
+                <input type="text" id="customerName">
+            </nobr>
+            
+            <nobr>
+                <label for="customerEmail">Email:</label>
+                <input type="email" id="customerEmail">
+            </nobr>
+            
+            <nobr>
+                <label for="customerPhone">Phone:</label>
+                <input type="tel" id="customerPhone">
+            </nobr>
+            
+            <nobr>
+                <label for="customerAddress">Address:</label>
+                <input type="text" id="customerAddress">
+            </nobr>
+
+        </fieldset>
+        <button type="button" onclick="addOrUpdateCustomerInData()">Save Customer</button>
+        <button type="button" onclick="hideCustomerForm()">Cancel</button>
+    </form>
+</div>
+<div id="deleteCustomerFormContainer" style="display: none;">
+    <h3>Delete Customer</h3>
+    <form id="deleteCustomerForm">
+        <p id="deleteCustomerConfirmation"></p>
+        <button type="button" onclick="removeCustomerFromData()">Delete Customer</button>
+        <button type="button" onclick="hideDeleteCustomerForm()">Cancel</button>
+    </form>
+</div>

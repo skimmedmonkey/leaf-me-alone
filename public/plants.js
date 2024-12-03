@@ -40,9 +40,17 @@ function editPlant(editButton) {
     document.getElementById("plantInventory").value = plantRow.plantInventory;
 
     // Plant type select menu must be handled differently
-    const selectElement = document.getElementById("plantType")
-    Array.from(selectElement.children).forEach(option => {
+    const selectTypeElement = document.getElementById("plantType")
+    Array.from(selectTypeElement.children).forEach(option => {
         if (option.innerHTML === plantRow.plantTypeName){
+            option.selected="selected"
+        }
+    })
+
+    // Plant type select menu must be handled differently
+    const selectMaturityElement = document.getElementById("plantMaturity")
+    Array.from(selectMaturityElement.children).forEach(option => {
+        if (option.innerHTML === plantRow.plantMaturity){
             option.selected="selected"
         }
     })
@@ -114,6 +122,8 @@ async function addOrUpdatePlantInData() {
         if (!response.ok) {
             throw new Error(`Edit failed: ${response.status}`);
         }
+
+        alert('Plant successfully edited')
     }
     else if (mode === 'add'){
 
@@ -129,6 +139,7 @@ async function addOrUpdatePlantInData() {
         if (!response.ok) {
             throw new Error(`Add failed: ${response.status}`);
         }
+        alert('Plant successfully added')
     }
 
     hidePlantForm();
@@ -146,7 +157,7 @@ async function removePlantFromData() {
     if (!response.ok) {
         throw new Error(`Delete failed: ${response.status}`);
     }
-    
+    alert('Plant successfully deleted')
     hideDeleteForm();
     location.reload();
 
