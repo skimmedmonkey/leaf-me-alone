@@ -11,7 +11,7 @@ SELECT supplierID, supplierName, supplierPhone, supplierEmail, amountDue
 FROM dbo.Suppliers
 
 --Plant data
-SELECT p.plantID, p.plantName, pt.plantTypeName, p.plantTypeID, p.plantMaturity, p.plantPrice, p.plantCost, p.plantInventory
+SELECT p.plantID, p.plantName, pt.plantTypeName, p.plantTypeID, p.plantMaturity, p.plantPrice, p.plantCost
 FROM dbo.Plants p
 JOIN dbo.PlantTypes pt
 ON p.plantTypeID = pt.id
@@ -24,7 +24,7 @@ LEFT JOIN dbo.Plants p ON oi.plantID = p.plantID
 GROUP BY o.orderID
 
 --Plants Suppliers
-SELECT plantID, supplierID 
+SELECT plantSupplierID, plantID, supplierID, plantQuantity
 FROM dbo.PlantsSuppliers
 
 --Plant Types
@@ -54,15 +54,14 @@ VALUES
     (:plantTypeNameInput)
 
 INSERT INTO dbo.Plants
-    (plantName, plantTypeID, plantMaturity, plantPrice, plantCost, plantInventory)
+    (plantName, plantTypeID, plantMaturity, plantPrice, plantCost)
 VALUES
     (   
         :pName,
         :plantTypeIDInput,
         :plantMaturityInput,
         :plantPriceInput,
-        :plantCostInput,
-        :plantInventoryInput
+        :plantCostInput
     )
 
 --Order form data
@@ -79,9 +78,9 @@ VALUES
 
 --PlantsSuppliers data
 INSERT INTO dbo.PlantsSuppliers
-    (plantID, supplierID)
+    (plantID, supplierID, plantQuantity)
 VALUES
-    (:plantIDInput, :supplierIDInput)
+    (:plantIDInput, :supplierIDInput, :plantQuantityInput)
 
 -------------DELETE STATEMENTS------------
 
@@ -99,7 +98,7 @@ WHERE id = :plantIDInput
 
 --PlantsSuppliers data
 DELETE FROM dbo.PlantsSuppliers
-WHERE plantID = :plantIDInput AND supplierID = :supplierIDInput;
+WHERE plantSupplierID = :plantSupplierIDInput;
 
 --OrderItems data
 DELETE FROM dbo.OrderItems
@@ -150,8 +149,7 @@ SET
     plantTypeID = :plantTypeIDInput, 
     plantMaturity = :plantMaturityInput,
     plantPrice = :plantPriceInput, 
-    plantCost = :plantCostInput, 
-    plantInventory = :plantInventoryInput
+    plantCost = :plantCostInput
 WHERE
     plantID = :plantIDInput
 
@@ -161,3 +159,12 @@ SET
     plantTypeName = :plantTypeNameInput
 WHERE
     plantTypeID = :plantTypeIDInput
+
+--Update PlantSuppliers Data
+UPDATE PlantsSuppliers
+SET
+    plantID = :plantIDInput
+    supplierID = :supplierIDInput
+    plantQuantity = :plantQuantityInput
+WHERE
+    plantSupplierID = :plantSupplierIDInput

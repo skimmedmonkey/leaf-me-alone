@@ -28,7 +28,6 @@ function editPlant(editButton) {
         plantMaturity: row.children[3].textContent.trim(),
         plantPrice: row.children[4].textContent.trim(),
         plantCost: row.children[5].textContent.trim(),
-        plantInventory: row.children[6].textContent.trim(),
     };
 
     // Update form fields
@@ -37,7 +36,6 @@ function editPlant(editButton) {
     document.getElementById("plantMaturity").value = plantRow.plantMaturity;
     document.getElementById("plantPrice").value = plantRow.plantPrice;
     document.getElementById("plantCost").value = plantRow.plantCost;
-    document.getElementById("plantInventory").value = plantRow.plantInventory;
 
     // Plant type select menu must be handled differently
     const selectTypeElement = document.getElementById("plantType")
@@ -80,7 +78,7 @@ function hideDeleteForm() {
 function deletePlant(plantID) {
 
     showDeleteForm();
-    document.getElementById("deletePlantConfirmation").innerHTML = `Are you sure you want to delete order: ${plantID}`;
+    document.getElementById("deletePlantConfirmation").innerHTML = `Are you sure you want to delete plant: ${plantID}`;
     plantIDForDelete = plantID;
 
 }
@@ -96,7 +94,6 @@ async function addOrUpdatePlantInData() {
     const plantMaturity = document.getElementById("plantMaturity").value 
     const plantPrice = document.getElementById("plantPrice").value
     const plantCost = document.getElementById("plantCost").value 
-    const plantInventory = document.getElementById("plantInventory").value
 
     const plantRecord = {
         plantID,
@@ -104,8 +101,7 @@ async function addOrUpdatePlantInData() {
         plantTypeID,
         plantMaturity,
         plantPrice,
-        plantCost,
-        plantInventory
+        plantCost
     }
 
     if (mode === 'edit'){
