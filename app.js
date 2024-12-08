@@ -14,7 +14,7 @@
 // Express
 var express = require('express');   // We are using the express library for the web server
 var app     = express();            // We need to instantiate an express object to interact with the server in our code
-PORT        = 5757;                 // Set a port number at the top so it's easy to change in the future
+PORT        = 57575;                 // Set a port number at the top so it's easy to change in the future
 app.use(express.static('public'));
 
 // Database
@@ -29,6 +29,13 @@ app.set('view engine', '.hbs');                 // Tell express to use the handl
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(express.static('public'))
+
+const Handlebars = require('handlebars');
+
+// Helper to safely serialize JSON for use in HTML
+Handlebars.registerHelper('json', function (context) {
+    return new Handlebars.SafeString(JSON.stringify(context).replace(/&/g, '\\u0026').replace(/</g, '\\u003c').replace(/>/g, '\\u003e'));
+});
 
 
 /*
@@ -330,39 +337,145 @@ app.post('/orders/add', (req, res) => {
     });
   }
 
+  app.get('/orders/:id', function (req, res) {
+    const orderID = req.params.id;
 
-app.put('/orders/edit', function (req, res) {
-    const data = req.body;
-    const query = `
-        UPDATE Orders
-        SET 
-            orderDate = '${data.orderDate}', 
-            orderPrice = '${data.orderPrice}', 
-            itemQuantity = '${data.itemQuantity}', 
-            isDelivery = '${data.isDelivery}', 
-            customerID = '${data.customerID}'
+    const orderQuery = `
+        SELECT 
+            o.orderID, o.orderDate, o.orderPrice, o.itemQuantity, o.isDelivery, o.customerID
+        FROM 
+            Orders o
         WHERE 
-            orderID = ${data.orderID};
+            o.orderID = ?;
     `;
-    db.pool.query(query, function (error) {
+
+    const orderItemsQuery = `
+        SELECT 
+            oi.plantID, oi.quantity, p.plantName, p.plantPrice
+        FROM 
+            OrderItems oi
+        JOIN 
+            Plants p ON oi.plantID = p.plantID
+        WHERE 
+            oi.orderID = ?;
+    `;
+
+    db.pool.query(orderQuery, [orderID], function (error, orderResults) {
         if (error) {
-            console.error("Error editing order:", error);
-            res.status(500).send("Error editing order.");
+            console.error("Error retrieving order:", error);
+            res.status(500).send("Error retrieving order.");
             return;
         }
-        res.status(200).send("Order updated.");
+
+        db.pool.query(orderItemsQuery, [orderID], function (error, orderItemsResults) {
+            if (error) {
+                console.error("Error retrieving order items:", error);
+                res.status(500).send("Error retrieving order items.");
+                return;
+            }
+
+            if (orderResults.length === 0) {
+                res.status(404).send("Order not found.");
+                return;
+            }
+
+            const order = orderResults[0];
+            order.plants = orderItemsResults;
+            res.json(order);
+        });
     });
 });
 
+
+app.put('/orders/:id', function (req, res) {
+    const orderID = req.params.id;
+    const { orderDate, orderPrice, itemQuantity, isDelivery, customerID, plants } = req.body;
+
+    if (!orderDate || !orderPrice || !itemQuantity || isDelivery === undefined || !customerID || !plants || plants.length === 0) {
+        return res.status(400).send("Invalid order data.");
+    }
+
+    db.pool.getConnection((err, connection) => {
+        if (err) {
+            console.error("Failed to get connection:", err);
+            return res.status(500).send("Failed to connect to the database.");
+        }
+
+        connection.beginTransaction((err) => {
+            if (err) {
+                connection.release();
+                console.error("Failed to start transaction:", err);
+                return res.status(500).send("Failed to start transaction.");
+            }
+
+            // Update the Orders table
+            const updateOrderQuery = `
+                UPDATE Orders 
+                SET orderDate = ?, orderPrice = ?, itemQuantity = ?, isDelivery = ?, customerID = ?
+                WHERE orderID = ?;
+            `;
+            connection.query(updateOrderQuery, [orderDate, orderPrice, itemQuantity, isDelivery, customerID, orderID], (err) => {
+                if (err) {
+                    return rollbackTransaction(connection, res, "Failed to update order.");
+                }
+
+                // Delete existing OrderItems
+                const deleteOrderItemsQuery = `DELETE FROM OrderItems WHERE orderID = ?;`;
+                connection.query(deleteOrderItemsQuery, [orderID], (err) => {
+                    if (err) {
+                        return rollbackTransaction(connection, res, "Failed to delete order items.");
+                    }
+
+                    // Insert updated OrderItems
+                    const orderItems = plants.map(({ plantID, quantity }) => [orderID, plantID, quantity]);
+                    const insertOrderItemsQuery = `
+                        INSERT INTO OrderItems (orderID, plantID, quantity)
+                        VALUES ?;
+                    `;
+                    connection.query(insertOrderItemsQuery, [orderItems], (err) => {
+                        if (err) {
+                            return rollbackTransaction(connection, res, "Failed to insert updated order items.");
+                        }
+
+                        // Commit the transaction
+                        connection.commit((err) => {
+                            connection.release();
+
+                            if (err) {
+                                console.error("Failed to commit transaction:", err);
+                                return res.status(500).send("Failed to commit transaction.");
+                            }
+
+                            res.status(200).send("Order updated successfully.");
+                        });
+                    });
+                });
+            });
+        });
+    });
+});
+
+
 app.delete('/orders/:id', function (req, res) {
-    const query = `DELETE FROM Orders WHERE orderID = ${req.params.id};`;
-    db.pool.query(query, function (error) {
+    const deleteOrderItemsQuery = `DELETE FROM OrderItems WHERE orderID = ${req.params.id};`;
+    const deleteOrderQuery = `DELETE FROM Orders WHERE orderID = ${req.params.id};`;
+
+    db.pool.query(deleteOrderItemsQuery, function (error) {
         if (error) {
-            console.error("Error deleting order:", error);
-            res.status(500).send("Error deleting order.");
+            console.error("Error deleting order items:", error);
+            res.status(500).send("Error deleting order items.");
             return;
         }
-        res.status(204).send();
+
+        db.pool.query(deleteOrderQuery, function (error) {
+            if (error) {
+                console.error("Error deleting order:", error);
+                res.status(500).send("Error deleting order.");
+                return;
+            }
+
+            res.status(204).send();
+        });
     });
 });
 
