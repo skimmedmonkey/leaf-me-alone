@@ -590,7 +590,7 @@ app.delete('/plantssuppliers/:plantSupplierID', function (req, res) {
 });
 
 // ---------------------- PLANTS ---------------------
-    
+
 app.get('/plants', function(req, res) {
 
     console.log('received select request')
@@ -605,7 +605,7 @@ app.get('/plants', function(req, res) {
             p.plantCost
         FROM 
             Plants p
-        JOIN 
+        LEFT JOIN 
             PlantTypes pt ON p.plantTypeID = pt.plantTypeID
     `;
     let query2 = "SELECT plantTypeID, plantTypeName FROM PlantTypes";
@@ -638,11 +638,11 @@ app.put('/plants/edit', function(req, res)
         const data = req.body;
         const query1 = `UPDATE Plants
             SET
-                plantName = '${data.plantName}', plantTypeID = '${data.plantTypeID}', plantMaturity = '${data.plantMaturity}', plantPrice = '${data.plantPrice}', plantCost = '${data.plantCost}'
+                plantName = '${data.plantName}', plantTypeID = ${data.plantTypeID}, plantMaturity = '${data.plantMaturity}', plantPrice = '${data.plantPrice}', plantCost = '${data.plantCost}'
             WHERE
                 plantID = ${data.plantID}`
 
-        db.pool.query(query1, function(error, rows, fields) {
+        db.pool.query(query1, function(error, rows, fields) { 
             if (error) {
                 console.log(error);
                 res.sendStatus(400);  // Error handling
@@ -663,7 +663,7 @@ app.post('/plants/add', function(req, res)
         INSERT INTO Plants 
         (plantName, plantTypeID, plantMaturity, plantPrice, plantCost) 
         VALUES 
-        ('${data.plantName}', '${data.plantTypeID}', '${data.plantMaturity}', '${data.plantPrice}', '${data.plantCost}')
+        ('${data.plantName}', ${data.plantTypeID}, '${data.plantMaturity}', '${data.plantPrice}', '${data.plantCost}')
     `;
 
     db.pool.query(query1, function(error, rows, fields) {

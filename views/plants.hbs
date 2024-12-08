@@ -1,3 +1,11 @@
+<!-- 
+Citation for the handlebar code on this page:
+Date: 12/08/2024
+Copied from /OR/ Adapted from /OR/ Based on:
+Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%204%20-%20Dynamically%20Displaying%20Data
+-->
+
+
 <h2>Plants</h2>
     <script src="plants.js"> </script>
     <button onclick="addPlant()">Add</button>
@@ -46,6 +54,7 @@
                 {{#each plantTypes}}
                 <option value="{{this.plantTypeID}}">{{this.plantTypeName}}</option>
                 {{/each}}
+                <option value="NULL">None</option>
             </select></nobr>
             
             <nobr><label for="plantMaturity">Maturity:</label>
@@ -56,10 +65,10 @@
             </select></nobr>
             
             <nobr><label for="plantPrice">Price:</label>
-            <input type="number" id="plantPrice"></nobr>
+            <input type="number" min="0" id="plantPrice"></nobr>
 
             <nobr><label for="plantCost">Cost:</label>
-            <input type="number" id="plantCost"></nobr>
+            <input type="number" min="0" id="plantCost"></nobr>
 
         </fieldset>
             <button type="button" onclick="addOrUpdatePlantInData()">Save Plant</button>

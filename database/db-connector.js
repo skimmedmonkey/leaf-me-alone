@@ -4,6 +4,7 @@
 // Example shell was used, with the remainder based on our project
 // Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/blob/main/Step%201%20-%20Connecting%20to%20a%20MySQL%20Database/README.md
 
+
 // Get an instance of mysql we can use in the app
 var mysql = require('mysql')
 

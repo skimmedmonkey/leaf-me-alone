@@ -30,6 +30,7 @@ function editPlant(editButton) {
         plantCost: row.children[5].textContent.trim(),
     };
 
+    console.log(plantRow);
     // Update form fields
     document.getElementById("plantID").value = plantRow.plantID;
     document.getElementById("plantName").value = plantRow.plantName;
@@ -40,9 +41,12 @@ function editPlant(editButton) {
     // Plant type select menu must be handled differently
     const selectTypeElement = document.getElementById("plantType")
     Array.from(selectTypeElement.children).forEach(option => {
-        if (option.innerHTML === plantRow.plantTypeName){
+        if (option.innerHTML === 'None' && plantRow.plantTypeName === ""){
             option.selected="selected"
         }
+        else if (option.innerHTML === plantRow.plantTypeName){
+            option.selected="selected"
+        } 
     })
 
     // Plant type select menu must be handled differently

@@ -1,10 +1,8 @@
 /*
-	CS340 Project Group 57
+	CS340 Portfolio Project Deliverable - Group 57 
     Benjamin Premi-Reiller and Steven Kim
     Leaf Me Alone Sales Management System
 */
-
--- MySQL Project Step 2 Table Creation And Data Dump
 
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
@@ -18,7 +16,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 DROP TABLE IF EXISTS `PlantTypes`;
 CREATE TABLE IF NOT EXISTS `PlantTypes` (
   `plantTypeID` INT NOT NULL AUTO_INCREMENT,
-  `plantTypeName` VARCHAR(45) NULL,
+  `plantTypeName` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`plantTypeID`))
 ENGINE = InnoDB;
 
@@ -33,14 +31,16 @@ CREATE TABLE `Plants` (
   `plantMaturity` VARCHAR(25) NOT NULL,
   `plantPrice` DECIMAL(6,2) NOT NULL,
   `plantCost` DECIMAL(6,2) NOT NULL,
-  `plantTypeID` INT NOT NULL,
+  `plantTypeID` INT NULL,
   PRIMARY KEY (`plantID`),
   UNIQUE(`plantName`, `plantMaturity`),
   CONSTRAINT `fk_Plants_PlantTypes`
     FOREIGN KEY (`plantTypeID`)
     REFERENCES `PlantTypes` (`plantTypeID`)
     ON DELETE CASCADE
-    ON UPDATE CASCADE)
+    ON UPDATE NO ACTION
+    )
+
 ENGINE = InnoDB;
 
 
