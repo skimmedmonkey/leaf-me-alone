@@ -14,7 +14,7 @@
 // Express
 var express = require('express');   // We are using the express library for the web server
 var app     = express();            // We need to instantiate an express object to interact with the server in our code
-PORT        = 57575;                 // Set a port number at the top so it's easy to change in the future
+PORT        = 5757;                 // Set a port number at the top so it's easy to change in the future
 app.use(express.static('public'));
 
 // Database
@@ -205,8 +205,9 @@ app.delete('/suppliers/:_id', function(req, res)
     });
 });   
 
+// -------------------------- ORDERS --------------------------------
 
-app.get('/orders', function(req, res)                 // This is the basic syntax for what is called a 'route'
+app.get('/orders', function(req, res)                
 {
     const ordersQuery = `
         SELECT 
@@ -365,16 +366,21 @@ app.delete('/orders/:id', function (req, res) {
     });
 });
 
+
+// -------------------------- PLANTSUPPLIERS--------------------------------
+
 app.get('/plantssuppliers', function(req, res)                 // This is the basic syntax for what is called a 'route'
 {
     console.log('received select request for PlantsSuppliers');
 
     let query1 = `
     SELECT
+        ps.plantSupplierID,
         ps.plantID,
         ps.supplierID,
         p.plantName,
-        s.supplierName
+        s.supplierName,
+        ps.plantQuantity
     FROM
         PlantsSuppliers ps
     JOIN
@@ -417,16 +423,17 @@ app.put('/plantssuppliers/edit', function (req, res) {
         UPDATE PlantsSuppliers
         SET
             plantID = '${data.plantID}',
-            supplierID = '${data.supplierID}'
+            supplierID = '${data.supplierID}',
+            plantQuantity = '${data.plantQuantity}'
         WHERE
-            plantID = ${data.originalPlantID} AND supplierID = ${data.originalSupplierID}`;
+            plantSupplierID = ${data.plantSupplierID}`;
     
     db.pool.query(query1, function (error, rows, fields) {
         if (error) {
             console.error("Error executing query:", error);
             res.status(400).send("Error updating PlantsSuppliers");
         } else {
-            res.redirect('/plantssuppliers');
+            res.render('plantssuppliers');
         }
     });
 });
@@ -436,8 +443,8 @@ app.post('/plantssuppliers/add', function (req, res) {
     const data = req.body;
 
     const query1 = `
-        INSERT INTO PlantsSuppliers (plantID, supplierID) 
-        VALUES ('${data.plantID}', '${data.supplierID}')
+        INSERT INTO PlantsSuppliers (plantID, supplierID, plantQuantity) 
+        VALUES ('${data.plantID}', '${data.supplierID}', '${data.plantQuantity}')
     `;
 
     db.pool.query(query1, function (error, rows, fields) {
@@ -450,13 +457,13 @@ app.post('/plantssuppliers/add', function (req, res) {
     });
 });
 
-app.delete('/plantssuppliers/:plantID/:supplierID', function (req, res) {
+app.delete('/plantssuppliers/:plantSupplierID', function (req, res) {
     console.log('received delete request for PlantsSuppliers');
-    const { plantID, supplierID } = req.params;
+    const { plantSupplierID } = req.params;
 
     const query1 = `
         DELETE FROM PlantsSuppliers 
-        WHERE plantID = ${plantID} AND supplierID = ${supplierID}
+        WHERE plantSupplierID = ${plantSupplierID};
     `;
 
     db.pool.query(query1, function (error, rows) {
@@ -482,15 +489,13 @@ app.get('/plants', function(req, res) {
             pt.plantTypeName,
             p.plantMaturity,
             p.plantPrice,
-            p.plantCost,
-            p.plantInventory
+            p.plantCost
         FROM 
             Plants p
         JOIN 
             PlantTypes pt ON p.plantTypeID = pt.plantTypeID
     `;
     let query2 = "SELECT plantTypeID, plantTypeName FROM PlantTypes";
-    let query3 = "SELECT DISTINCT plantMaturity FROM Plants"
 
     db.pool.query(query1, function(error, rows, fields){
         if (error) {
@@ -520,7 +525,7 @@ app.put('/plants/edit', function(req, res)
         const data = req.body;
         const query1 = `UPDATE Plants
             SET
-                plantName = '${data.plantName}', plantTypeID = '${data.plantTypeID}', plantMaturity = '${data.plantMaturity}', plantPrice = '${data.plantPrice}', plantCost = '${data.plantCost}', plantInventory = '${data.plantInventory}'
+                plantName = '${data.plantName}', plantTypeID = '${data.plantTypeID}', plantMaturity = '${data.plantMaturity}', plantPrice = '${data.plantPrice}', plantCost = '${data.plantCost}'
             WHERE
                 plantID = ${data.plantID}`
 
@@ -543,9 +548,9 @@ app.post('/plants/add', function(req, res)
     // Use the plantTypeID passed from the form
     const query1 = `
         INSERT INTO Plants 
-        (plantName, plantTypeID, plantMaturity, plantPrice, plantCost, plantInventory) 
+        (plantName, plantTypeID, plantMaturity, plantPrice, plantCost) 
         VALUES 
-        ('${data.plantName}', '${data.plantTypeID}', '${data.plantMaturity}', '${data.plantPrice}', '${data.plantCost}', '${data.plantInventory}')
+        ('${data.plantName}', '${data.plantTypeID}', '${data.plantMaturity}', '${data.plantPrice}', '${data.plantCost}')
     `;
 
     db.pool.query(query1, function(error, rows, fields) {

@@ -1,6 +1,6 @@
 // Store plants suppliers data in memory
-let plantIDForDelete = null;
-let supplierIDForDelete = null;
+let plantSupplierIDForDelete = null;
+
 
 function addPlantsSupplier(){
 
@@ -17,23 +17,28 @@ function editPlantsSupplier(editButton) {
     form.dataset.mode = 'edit';
     form.reset();
     const row = editButton.closest('tr');
-    const currentPlantID = row.children[0].getAttribute('data-id');
-    const currentSupplierID = row.children[1].getAttribute('data-id');
 
-    selectedPlantID = currentPlantID;
-    selectedSupplierID = currentSupplierID;
+    const plantSupplierID = row.children[0].textContent
+    const currentPlantID = row.children[1].getAttribute('data-id');
+    const currentSupplierID = row.children[2].getAttribute('data-id');
+    const plantQuantity = row.children[3].textContent;
 
+    console.log(plantQuantity)
 
+    //selectedPlantID = currentPlantID;
+    //selectedSupplierID = currentSupplierID;
 
     //const plantID = row.children[0].getAttribute("data-id");
     //const supplierID = row.children[1].getAttribute("data-id");
     
     // Update form fields
+    document.getElementById("plantSupplierID").value = plantSupplierID;
     document.getElementById("plantID").value = currentPlantID;
     document.getElementById("supplierID").value = currentSupplierID;
+    document.getElementById("plantQuantity").value = plantQuantity;
 
-    form.dataset.originalPlantID = currentPlantID;
-    form.dataset.originalPlantID = currentSupplierID;
+    //form.dataset.originalPlantID = currentPlantID;
+    //form.dataset.originalPlantID = currentSupplierID;
     // Plant type select menu must be handled differently
     //const selectElement = document.getElementById("plantType")
     //Array.from(selectElement.children).forEach(option => {
@@ -64,11 +69,10 @@ function hideDeleteForm() {
     document.getElementById("deleteFormContainer").style.display = "none";
 }
 
-function deletePlantSupplier(plantID, supplierID) {
+function deletePlantSupplier(plantSupplierID) {
     showDeleteForm();
-    document.getElementById("deletePlantSupplierConfirmation").innerHTML = `Are you sure you want to delete plant: ${plantID} and supplier ${supplierID}?`;
-    plantIDForDelete = plantID;
-    supplierIDForDelete = supplierID;
+    document.getElementById("deletePlantSupplierConfirmation").innerHTML = `Are you sure you want to delete plant supplier: ${plantSupplierID}`;
+    plantSupplierIDForDelete = plantSupplierID;
 
 }
 
@@ -77,17 +81,21 @@ async function addOrUpdatePlantSupplierInData() {
     const form = document.getElementById("plantsSuppliersForm")   
     const mode = form.dataset.mode
     
+    const plantSupplierID = document.getElementById("plantSupplierID").value 
     const plantID = document.getElementById("plantID").value 
     const supplierID = document.getElementById("supplierID").value 
+    const plantQuantity = document.getElementById("plantQuantity").value 
 
-    const originalPlantID = form.dataset.originalPlantID;
-    const originalSupplierID = form.dataset.originalSupplierID;
+    //const originalPlantID = form.dataset.originalPlantID;
+    //const originalSupplierID = form.dataset.originalSupplierID;
 
     const plantsSupplierRecord = {
+        plantSupplierID,
         plantID,
         supplierID,
-        originalPlantID,
-        originalSupplierID,
+        //originalPlantID,
+        //originalSupplierID,
+        plantQuantity
     }
 
     if (mode === 'edit'){
@@ -100,10 +108,12 @@ async function addOrUpdatePlantSupplierInData() {
             },
             body: JSON.stringify(plantsSupplierRecord)
         });
-
+        console.log(response)
         if (!response.ok) {
             throw new Error(`Edit failed: ${response.status}`);
         }
+
+        alert('PlantsSuppliers successfully edited')
     }
     else if (mode === 'add'){
 
@@ -119,6 +129,8 @@ async function addOrUpdatePlantSupplierInData() {
         if (!response.ok) {
             throw new Error(`Add failed: ${response.status}`);
         }
+
+        alert('PlantsSuppliers successfully added')
     }
 
     hideForm();
@@ -129,7 +141,7 @@ async function addOrUpdatePlantSupplierInData() {
 async function removePlantSupplierFromData() {
     // DELETE from PlantsSuppliers Table
     console.log('Deleting plantID ${plantIDForDelete}, supplierID ${supplierIDForDelete');
-    const response = await fetch(`/plantssuppliers/${plantIDForDelete}/${supplierIDForDelete}`, {
+    const response = await fetch(`/plantssuppliers/${plantSupplierIDForDelete}`, {
         method: 'DELETE'
     });
 
@@ -137,6 +149,7 @@ async function removePlantSupplierFromData() {
         throw new Error(`Delete failed: ${response.status}`);
     }
     
+    alert('PlantsSuppliers successfully deleted')
     hideDeleteForm();
     location.reload();
 
