@@ -33,7 +33,6 @@ CREATE TABLE `Plants` (
   `plantMaturity` VARCHAR(25) NOT NULL,
   `plantPrice` DECIMAL(6,2) NOT NULL,
   `plantCost` DECIMAL(6,2) NOT NULL,
-  `plantInventory` INT NOT NULL,
   `plantTypeID` INT NOT NULL,
   PRIMARY KEY (`plantID`),
   UNIQUE(`plantName`, `plantMaturity`),
@@ -64,9 +63,13 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `PlantsSuppliers`;
 CREATE TABLE `PlantsSuppliers` (
+  `plantSupplierID` INT NOT NULL AUTO_INCREMENT,
   `plantID` INT NOT NULL,
   `supplierID` INT NOT NULL,
-  PRIMARY KEY (`plantID`, `supplierID`),
+  `plantQuantity` INT NOT NULL,
+  PRIMARY KEY (`plantSupplierID`),
+  CONSTRAINT `UC_plantID_supplerID`
+    UNIQUE (`plantID`, `supplierID`),
   CONSTRAINT `fk_PlantsSuppliers_Plants`
     FOREIGN KEY (`plantID`)
     REFERENCES `Plants` (`plantID`)
@@ -148,12 +151,12 @@ INSERT INTO PlantTypes (plantTypeID, plantTypeName) VALUES
 
 -- Insert 'Plants' example data
 
-INSERT INTO Plants (plantID, plantName, plantTypeID, plantMaturity, plantPrice, plantCost, plantInventory) VALUES
-(1, 'Raspberry', 101, 'Mature', 25.99, 15.00, 50),
-(2, 'Jade', 102, 'Seedling', 10.50, 6.00, 200),
-(3, 'Tulip', 103, 'Mature', 30.75, 18.00, 80),
-(4, 'Oak Tree', 101, 'Seedling', 12.25, 7.50, 150),
-(5, 'Saguaro', 104, 'Mature', 45.00, 27.00, 20);
+INSERT INTO Plants (plantID, plantName, plantTypeID, plantMaturity, plantPrice, plantCost) VALUES
+(1, 'Raspberry', 101, 'Mature', 25.99, 15.00),
+(2, 'Jade', 102, 'Seedling', 10.50, 6.00),
+(3, 'Tulip', 103, 'Mature', 30.75, 18.00),
+(4, 'Oak Tree', 101, 'Seedling', 12.25, 7.50),
+(5, 'Saguaro', 104, 'Mature', 45.00, 27.00);
 
 
 -- Insert 'Suppliers' example data
@@ -165,17 +168,17 @@ INSERT INTO Suppliers (supplierID, supplierName, supplierPhone, supplierEmail, a
 (5, 'Outdoor Nursery', 5556667777, 'help@outdoornursery.com', 320.40);
 
 -- Insert 'PlantsSuppliers' example data
-INSERT INTO PlantsSuppliers (plantID, supplierID) VALUES
-(1, 1),
-(1, 2),
-(2, 3),
-(2, 4),
-(3, 5),
-(3, 1),
-(4, 2),
-(4, 3),
-(5, 4),
-(5, 5);
+INSERT INTO PlantsSuppliers (plantID, supplierID, plantQuantity) VALUES
+(1, 1, 10),
+(1, 2, 20),
+(2, 3, 30),
+(2, 4, 20),
+(3, 5, 5),
+(3, 1, 8),
+(4, 2, 12),
+(4, 3, 41),
+(5, 4, 68),
+(5, 5, 3);
 
 -- Insert 'Customers' example data
 INSERT INTO Customers (customerID, customerName, customerEmail, customerPhone, customerAddress, createDate) VALUES
