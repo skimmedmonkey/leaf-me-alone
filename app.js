@@ -30,9 +30,11 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(express.static('public'))
 
+// Helper to safely serialize JSON for use in HTML
+// Sample function used and expanded specifically for &, < and >
+// Source URL: https://www.zshawnsyed.com/2015/04/30/output-json-in-handlebars/
 const Handlebars = require('handlebars');
 
-// Helper to safely serialize JSON for use in HTML
 Handlebars.registerHelper('json', function (context) {
     return new Handlebars.SafeString(JSON.stringify(context).replace(/&/g, '\\u0026').replace(/</g, '\\u003c').replace(/>/g, '\\u003e'));
 });

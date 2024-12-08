@@ -23,3 +23,5 @@ This project is intended to demonstrate the ability to perform CRUD operations o
 All Express Handlebar code is based on the CS 340 starter code available here: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%204%20-%20Dynamically%20Displaying%20Data
 
 Express server side code was adapted based on CS 340 starter code available here: https://github.com/osu-cs340-ecampus/nodejs-starter-app/blob/main/Step%200%20-%20Setting%20Up%20Node.js/README.md
+
+Handlebar helper was adapted from a blogpost about Handlebar helpers for outputting JSON: https://www.zshawnsyed.com/2015/04/30/output-json-in-handlebars/

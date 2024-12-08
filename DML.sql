@@ -17,11 +17,23 @@ JOIN dbo.PlantTypes pt
 ON p.plantTypeID = pt.id
 
 --Order data
-Select o.orderID, o.orderDate, o.orderPrice, o.itemQuantity, o.isDelivery, o.customerID, c.customerName, GROUP_CONCAT(p.plantName) AS plantsInOrder
-FROM dbo.Orders orderDateJOIN dbo.Customers c ON o.customerID = c.customerID
-LEFT JOIN dbo.OrderItems oi ON o.orderID = oi.orderID
-LEFT JOIN dbo.Plants p ON oi.plantID = p.plantID
+Select o.orderID, o.orderDate, o.orderPrice, o.itemQuantity, o.isDelivery, o.customerID, c.customerName, GROUP_CONCAT(p.plantName SEPARATOR ', ') AS plants
+FROM Orders o
+JOIN Customers c ON o.customerID = c.customerID
+JOIN OrderItems oi ON o.orderID = oi.orderID
+JOIN Plants p ON oi.plantID = p.plantID
 GROUP BY o.orderID
+
+--Specific Order data
+SELECT o.orderID, o.orderDate, o.orderPrice, o.itemQuantity, o.isDelivery, o.customerID
+FROM Order o
+Where o.orderID = :id;
+
+--Specific orderItems data
+SELECT oi.plantID, oi.quantity, p.plantName, p.plantPrice
+FROM OrderItems oi
+JOIN Plants p ON oi.plantID = p.plantID
+WHERE oi.orderID = :id;
 
 --Plants Suppliers
 SELECT plantSupplierID, plantID, supplierID, plantQuantity
