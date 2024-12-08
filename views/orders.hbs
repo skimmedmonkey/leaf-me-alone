@@ -46,18 +46,19 @@
         <option value="{{this.customerID}}">{{this.customerName}}</option>
         {{/each}}
     </select>
-
+    <div id="plantsContainer">
     {{#each plants}}
-    <div id="plantsContainer" class="plant-row">
+    <div class="plant-row">
         <!--<label for="plant-{{this.plantID}}">{{this.plantName}} {{this.plantPrice}}</label>
         <input type="number" id="plant-{{this.plantID}}" name="plant-{{this.plantID}}" placeholder="Quantity" min="0">
         <input type="hidden" id="price-{{this.plantID}}" value="{{this.plantPrice}}">-->
     </div>
     {{/each}}
+    </div>
 
     <label for="isDelivery">Delivery:</label>
     <input type="checkbox" id="isDelivery">
-    <button type="button" onclick="addOrder()">Submit Order</button>
+    <button type="button" onclick="addOrEditOrder()">Submit Order</button>
     <button type="button" onclick="hideAddOrderForm()">Cancel</button>
     </form>
 </div>

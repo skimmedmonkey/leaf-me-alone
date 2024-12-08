@@ -43,7 +43,7 @@ function removePlantRow(button) {
     plantRow.remove();
 }
 
-// Add a new order
+/*/ Add a new order
 async function addOrder() {
   const orderDate = document.getElementById("orderDate").value;
   const customerID = document.getElementById("customerID").value;
@@ -106,8 +106,7 @@ async function addOrder() {
       console.error("Error adding order:", error);
       alert(`Error adding order: ${error.message}`);
   }
-}
-
+}*/
 
   async function deleteOrder(orderID) {
     if (!confirm(`Are you sure you want to delete order #${orderID}?`)) {
@@ -135,8 +134,10 @@ async function addOrder() {
     const plantsContainer = document.getElementById("plantsContainer");
     plantsContainer.innerHTML = ""; // Clear existing rows
 
+    // Create a unique map for all plants, pre-filling quantities if in the order
     plants.forEach(plant => {
-        const quantity = orderPlants[plant.plantID] || ""; // Pre-fill quantity if plant is in the order
+        const quantity = orderPlants[plant.plantID] || ""; // Use order quantity if available, or leave blank
+
         const plantRow = document.createElement("div");
         plantRow.classList.add("plant-row");
 
@@ -149,6 +150,106 @@ async function addOrder() {
     });
 }
 
+
+/*function populatePlantsContainer(orderPlants = {}) {
+const plantsContainer = document.getElementById("plantsContainer");
+plantsContainer.innerHTML = ""; // Clear existing rows
+console.log("Order Plants Map:", orderPlants);
+plants.forEach(plant => {
+    const quantity = orderPlants[plant.plantID] || ""; // Pre-fill quantity if plant is in the order
+    const plantRow = document.createElement("div");
+    plantRow.classList.add("plant-row");
+
+    plantRow.innerHTML = `
+        <label for="plant-${plant.plantID}">${plant.plantName} (${plant.plantPrice})</label>
+        <input type="number" class="plant-quantity" id="plant-${plant.plantID}" name="plant-${plant.plantID}" value="${quantity}" min="0">
+    `;
+
+    plantsContainer.appendChild(plantRow);
+});
+};*/
+
+async function addOrEditOrder() {
+    const orderDate = document.getElementById("orderDate").value;
+    const customerID = document.getElementById("customerID").value;
+    const isDelivery = document.getElementById("isDelivery").checked ? 1 : 0;
+
+    let itemQuantity = 0;
+    let orderPrice = 0.0;
+
+    // Collect plant quantities and calculate totals
+    const plantRows = document.querySelectorAll(".plant-row");
+    const plantsInOrder = [];
+    plantRows.forEach(row => {
+        const input = row.querySelector("input[type='number']");
+        if (!input || !input.id) {
+            console.warn("Skipping row due to missing input or ID:", row);
+            return;
+        }
+        
+        const plantID = input.id.split('-')[1];
+        const quantity = parseInt(input.value, 10) || 0;
+
+        if (quantity > 0) {
+            const plant = plants.find(p => p.plantID == plantID);
+            console.log("Processing Plant Row:", input.id, "Quantity:", quantity);
+            if (plant) {
+                const price = parseFloat(plant.plantPrice);
+                itemQuantity += quantity;
+                orderPrice += quantity * price;
+                //if (!plantsInOrder.some(plant => plant.plantID === plantID)) {
+                //    plantsInOrder.push({palntID, quantity});
+                //}
+                console.log("Global Plants Array:", plantsInOrder);
+                plantsInOrder.push({
+                    plantID,
+                    quantity,
+                });
+            }
+        }
+    });
+
+    // Validate the order data
+    if (!orderDate || !customerID || plantsInOrder.length === 0) {
+        alert("Please complete all required fields and add at least one plant.");
+        return;
+    }
+
+    const orderData = { orderDate, orderPrice, itemQuantity, isDelivery, customerID, plants: plantsInOrder };
+
+    try {
+        let response;
+
+        // Determine whether to add or edit based on `orderIDForEdit`
+        if (orderIDForEdit) {
+            // Edit mode
+            response = await fetch(`/orders/${orderIDForEdit}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderData),
+            });
+        } else {
+            // Add mode
+            response = await fetch('/orders/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderData),
+            });
+        }
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(errorText);
+        }
+
+        const action = orderIDForEdit ? "updated" : "added";
+        alert(`Order successfully ${action}!`);
+        location.reload();
+    } catch (error) {
+        console.error("Error saving order:", error);
+        alert(`Error saving order: ${error.message}`);
+    }
+}
 
 async function editOrder(orderID) {
   console.log(`Fetching order details for ID: ${orderID}`);
@@ -170,7 +271,7 @@ async function editOrder(orderID) {
           acc[plant.plantID] = plant.quantity;
           return acc;
       }, {});
-
+    console.log("Order Plants Map:, orderPlants");
       populatePlantsContainer(orderPlantsMap); // Populate with order's plants and quantities
       orderIDForEdit = orderID;
   } catch (error) {
