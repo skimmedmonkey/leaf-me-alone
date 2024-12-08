@@ -222,6 +222,8 @@ async function addOrEditOrder() {
 
         // Determine whether to add or edit based on `orderIDForEdit`
         if (orderIDForEdit) {
+            const formattedDate = formatDateForInput(orderDate);
+            document.getElementById("orderDate").value = formattedDate;
             // Edit mode
             response = await fetch(`/orders/${orderIDForEdit}`, {
                 method: 'PUT',
@@ -261,8 +263,8 @@ async function editOrder(orderID) {
 
       const order = await response.json();
       console.log("Fetched order details:", order);
-
-      document.getElementById("orderDate").value = order.orderDate;
+      const formattedDate = formatDateForInput(order.orderDate);
+      document.getElementById("orderDate").value = formattedDate;
       document.getElementById("customerID").value = order.customerID;
       document.getElementById("isDelivery").checked = order.isDelivery === 1;
 
@@ -328,4 +330,15 @@ async function submitOrder() {
       console.error(`Error ${orderIDForEdit ? "updating" : "adding"} order:`, error);
       alert(error.message);
   }
+}
+
+function formatDateForInput(dateString) {
+    const date = new Date(dateString); // Convert string to Date object
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+
+    return `${year}-${month}-${day}T${hours}:${minutes}`; // Return formatted string
 }
